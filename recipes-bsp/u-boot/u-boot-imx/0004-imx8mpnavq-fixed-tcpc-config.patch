@@ -1,0 +1,28 @@
+From 81effec098c2d741c15adb1f9bd029a3c4758a42 Mon Sep 17 00:00:00 2001
+From: Kent Meyer <kent@emcraft.com>
+Date: Mon, 17 Jan 2022 16:57:31 +0000
+Subject: [PATCH] Fixed tcpc2 address to 0x52 instead of 0x53
+
+---
+ board/freescale/imx8mp_evk/imx8mp_evk.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/board/freescale/imx8mp_evk/imx8mp_evk.c b/board/freescale/imx8mp_evk/imx8mp_evk.c
+index ff9907d33b..d5580f5985 100644
+--- a/board/freescale/imx8mp_evk/imx8mp_evk.c
++++ b/board/freescale/imx8mp_evk/imx8mp_evk.c
+@@ -189,12 +189,12 @@ struct tcpc_port_config port1_config = {
+ 	.max_snk_mw = 45000,
+ 	.op_snk_mv = 15000,
+ 	.switch_setup_func = &pd_switch_snk0_enable,
+-	.disable_pd = true,
++	.disable_pd = false,
+ };
+ 
+ struct tcpc_port_config port2_config = {
+ 	.i2c_bus = 3, /*i2c4*/
+-	.addr = 0x53,
++	.addr = 0x52,
+ 	.port_type = TYPEC_PORT_UFP,
+ 	.max_snk_mv = 20000,
+ 	.max_snk_ma = 3000,

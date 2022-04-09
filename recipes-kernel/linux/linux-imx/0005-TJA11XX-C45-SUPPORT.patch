@@ -1,0 +1,178 @@
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index 32923a16925a..d62d685358eb 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -1970,6 +1970,7 @@ static int fec_enet_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
+ 	ret = pm_runtime_resume_and_get(dev);
+ 	if (ret < 0)
+ 		return ret;
++ 
+ 
+ 	if (is_c45) {
+ 		frame_start = FEC_MMFR_ST_C45;
+@@ -2291,6 +2292,7 @@ static int fec_enet_mii_init(struct platform_device *pdev)
+ 	snprintf(fep->mii_bus->id, MII_BUS_ID_SIZE, "%s-%x",
+ 		pdev->name, fep->dev_id + 1);
+ 	fep->mii_bus->priv = fep;
++	fep->mii_bus->probe_capabilities = MDIOBUS_C22_C45;
+ 	fep->mii_bus->parent = &pdev->dev;
+ 
+ 	err = of_mdiobus_register(fep->mii_bus, node);
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 9e9cd616148c..4b1ed81be295 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -233,6 +233,12 @@ config NATIONAL_PHY
+ 	help
+ 	  Currently supports the DP83865 PHY.
+ 
++config NXP_C45_TJA11XX_PHY
++	tristate "NXP C45 TJA11XX PHYs"
++	help
++	  Enable support for NXP C45 TJA11XX PHYs.
++	  Currently supports only the TJA1103 PHY.
++
+ config NXP_TJA11XX_PHY
+ 	tristate "NXP TJA11xx PHYs support"
+ 	depends on HWMON
+diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+index fcf6dceb0a2d..31f47c5d1d43 100644
+--- a/drivers/net/phy/Makefile
++++ b/drivers/net/phy/Makefile
+@@ -71,6 +71,7 @@ obj-$(CONFIG_MICROCHIP_PHY)	+= microchip.o
+ obj-$(CONFIG_MICROCHIP_T1_PHY)	+= microchip_t1.o
+ obj-$(CONFIG_MICROSEMI_PHY)	+= mscc/
+ obj-$(CONFIG_NATIONAL_PHY)	+= national.o
++obj-$(CONFIG_NXP_C45_TJA11XX_PHY)	+= nxp-c45-tja11xx.o
+ obj-$(CONFIG_NXP_TJA11XX_PHY)	+= nxp-tja11xx.o
+ obj-$(CONFIG_QSEMI_PHY)		+= qsemi.o
+ obj-$(CONFIG_REALTEK_PHY)	+= realtek.o
+diff --git a/drivers/net/phy/phy-c45.c b/drivers/net/phy/phy-c45.c
+index bd11e62bfdfe..63d3ee0a118f 100644
+--- a/drivers/net/phy/phy-c45.c
++++ b/drivers/net/phy/phy-c45.c
+@@ -8,6 +8,57 @@
+ #include <linux/mii.h>
+ #include <linux/phy.h>
+ 
++/**
++ * genphy_c45_pma_can_sleep - checks if the PMA have sleep support
++ * @phydev: target phy_device struct
++ */
++static bool genphy_c45_pma_can_sleep(struct phy_device *phydev)
++{
++	int stat1;
++
++	stat1 = phy_read_mmd(phydev, MDIO_MMD_PMAPMD, MDIO_STAT1);
++	if (stat1 < 0)
++		return false;
++
++	return !!(stat1 & MDIO_STAT1_LPOWERABLE);
++}
++
++/**
++ * genphy_c45_pma_resume - wakes up the PMA module
++ * @phydev: target phy_device struct
++ */
++int genphy_c45_pma_resume(struct phy_device *phydev)
++{
++	if (!genphy_c45_pma_can_sleep(phydev))
++		return -EOPNOTSUPP;
++
++	return phy_clear_bits_mmd(phydev, MDIO_MMD_PMAPMD, MDIO_CTRL1,
++				  MDIO_CTRL1_LPOWER);
++}
++EXPORT_SYMBOL_GPL(genphy_c45_pma_resume);
++
++/**
++ * genphy_c45_pma_suspend - suspends the PMA module
++ * @phydev: target phy_device struct
++ */
++int genphy_c45_pma_suspend(struct phy_device *phydev)
++{
++	if (!genphy_c45_pma_can_sleep(phydev))
++		return -EOPNOTSUPP;
++
++	return phy_set_bits_mmd(phydev, MDIO_MMD_PMAPMD, MDIO_CTRL1,
++				MDIO_CTRL1_LPOWER);
++}
++EXPORT_SYMBOL_GPL(genphy_c45_pma_suspend);
++
++int genphy_c45_loopback(struct phy_device *phydev, bool enable)
++{
++	return phy_modify_mmd(phydev, MDIO_MMD_PCS, MDIO_CTRL1,
++			      MDIO_PCS_CTRL1_LOOPBACK,
++			      enable ? MDIO_PCS_CTRL1_LOOPBACK : 0);
++}
++EXPORT_SYMBOL_GPL(genphy_c45_loopback);
++
+ /**
+  * genphy_c45_setup_forced - configures a forced speed
+  * @phydev: target phy_device struct
+diff --git a/drivers/net/phy/phy-core.c b/drivers/net/phy/phy-core.c
+index 8d333d3084ed..6c6e78aa52f0 100644
+--- a/drivers/net/phy/phy-core.c
++++ b/drivers/net/phy/phy-core.c
+@@ -472,9 +472,9 @@ int __phy_read_mmd(struct phy_device *phydev, int devad, u32 regnum)
+ 	if (regnum > (u16)~0 || devad > 32)
+ 		return -EINVAL;
+ 
+-	if (phydev->drv && phydev->drv->read_mmd) {
++	if (false) { // phydev->drv && phydev->drv->read_mmd) {
+ 		val = phydev->drv->read_mmd(phydev, devad, regnum);
+-	} else if (phydev->is_c45) {
++	} else if (true) { //phydev->is_c45) {
+ 		val = __mdiobus_c45_read(phydev->mdio.bus, phydev->mdio.addr,
+ 					 devad, regnum);
+ 	} else {
+@@ -528,9 +528,9 @@ int __phy_write_mmd(struct phy_device *phydev, int devad, u32 regnum, u16 val)
+ 	if (regnum > (u16)~0 || devad > 32)
+ 		return -EINVAL;
+ 
+-	if (phydev->drv && phydev->drv->write_mmd) {
++	if (false) { //phydev->drv && phydev->drv->write_mmd) {
+ 		ret = phydev->drv->write_mmd(phydev, devad, regnum, val);
+-	} else if (phydev->is_c45) {
++	} else if (true) { //phydev->is_c45) {
+ 		ret = __mdiobus_c45_write(phydev->mdio.bus, phydev->mdio.addr,
+ 					  devad, regnum, val);
+ 	} else {
+diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+index 7da6bdb3af82..438489545fd2 100644
+--- a/drivers/net/phy/phy.c
++++ b/drivers/net/phy/phy.c
+@@ -495,10 +495,11 @@ EXPORT_SYMBOL(phy_queue_state_machine);
+  *
+  * @phydev: the phy_device struct
+  */
+-static void phy_trigger_machine(struct phy_device *phydev)
++void phy_trigger_machine(struct phy_device *phydev)
+ {
+ 	phy_queue_state_machine(phydev, 0);
+ }
++EXPORT_SYMBOL(phy_trigger_machine);
+ 
+ static void phy_abort_cable_test(struct phy_device *phydev)
+ {
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 8559a829a822..180d4e42f6a3 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -1562,6 +1562,9 @@ int genphy_c45_read_mdix(struct phy_device *phydev);
+ int genphy_c45_pma_read_abilities(struct phy_device *phydev);
+ int genphy_c45_read_status(struct phy_device *phydev);
+ int genphy_c45_config_aneg(struct phy_device *phydev);
++int genphy_c45_loopback(struct phy_device *phydev, bool enable);
++int genphy_c45_pma_resume(struct phy_device *phydev);
++int genphy_c45_pma_suspend(struct phy_device *phydev);
+ 
+ /* Generic C45 PHY driver */
+ extern struct phy_driver genphy_c45_driver;
+@@ -1587,6 +1590,7 @@ int phy_drivers_register(struct phy_driver *new_driver, int n,
+ 			 struct module *owner);
+ void phy_state_machine(struct work_struct *work);
+ void phy_queue_state_machine(struct phy_device *phydev, unsigned long jiffies);
++void phy_trigger_machine(struct phy_device *phydev);
+ void phy_mac_interrupt(struct phy_device *phydev);
+ void phy_start_machine(struct phy_device *phydev);
+ void phy_stop_machine(struct phy_device *phydev);
