@@ -105,6 +105,7 @@ function launch_mtp() {
 
 # Enable gadget mode, ignore error if it's already a gadget.
 echo device > /sys/kernel/debug/usb/38100000.usb/mode || true
+sleep 1
 
 if echo $cmdline | grep mfgboot - > /dev/null; then
 	entry=$(ls -A $UDC_DIR)
