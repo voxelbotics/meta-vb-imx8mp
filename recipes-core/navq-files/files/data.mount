@@ -1,0 +1,11 @@
+[Unit]
+Description=Mount user data partition
+
+[Mount]
+What=/dev/mmcblk2p5
+Where=/data
+Type=ext4
+Options=rw
+
+[Install]
+WantedBy=local-fs.target
