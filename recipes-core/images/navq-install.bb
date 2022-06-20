@@ -34,7 +34,8 @@ inherit core-image
 IMAGE_ROOTFS_SIZE = "16384"
 IMAGE_ROOTFS_EXTRA_SPACE = "0"
 
-COMPATIBLE_HOST = "(aarch64-poky).*-linux"
+COMPATIBLE_HOST ?= "(aarch64-poky).*-linux"
+SCRIPT_NAME ?= "navq-install"
 
 #ROOTFS_POSTPROCESS_COMMAND += " custom_files; "
 IMAGE_POSTPROCESS_COMMAND += " build_uimage; "
@@ -54,7 +55,7 @@ label: gpt
 /dev/mmcblk2p5 : type=L, name="data"
 EOF
 	# generate uuu script
-	cat << EOF > ${DEPLOY_DIR_IMAGE}/navq-install.uuu
+	cat << EOF > ${DEPLOY_DIR_IMAGE}/${SCRIPT_NAME}.uuu
 uuu_version 1.0.1
 
 # boot installation initrd image
