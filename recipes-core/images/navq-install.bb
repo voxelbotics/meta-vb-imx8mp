@@ -63,7 +63,7 @@ SDPS: boot -f imx-boot-imx8mpnavq-sd.bin-flash_evk
 FB: ucmd setenv fastboot_buffer \$loadaddr
 FB: download -f Image
 FB: ucmd setenv fastboot_buffer \$fdt_addr
-FB: download -f imx8mp-evk-navq.dtb
+FB: download -f imx8mp-navq.dtb
 FB: ucmd setenv fastboot_buffer \$initrd_addr
 FB: download -f navq-install-initrd.uImage
 FB: ucmd run mmcargs
@@ -78,7 +78,7 @@ FBK: ucmd sfdisk /dev/mmcblk2 < /tmp/partitions.sfdisk
 FBK: ucmd mkfs.vfat /dev/mmcblk2p1
 FBK: ucmd mount /dev/mmcblk2p1 /mnt
 FBK: ucp Image T:/mnt/Image
-FBK: ucp imx8mp-evk-navq.dtb T:/mnt/imx8mp-evk-navq.dtb
+FBK: ucp imx8mp-navq.dtb T:/mnt/imx8mp-navq.dtb
 FBK: ucmd umount /mnt
 FBK: ucmd mkfs.ext4 -F /dev/mmcblk2p3
 FBK: ucmd mount /dev/mmcblk2p3 /mnt
