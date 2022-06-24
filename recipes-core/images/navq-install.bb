@@ -74,6 +74,7 @@ FB: acmd booti \$loadaddr \$initrd_addr \$fdt_addr
 FBK: ucp imx-boot-imx8mpnavq-sd.bin-flash_evk T:/tmp/imx-boot-imx8mpnavq-sd.bin-flash_evk
 FBK: ucmd dd if=/tmp/imx-boot-imx8mpnavq-sd.bin-flash_evk of=/dev/mmcblk2 bs=1k seek=32
 FBK: ucp partitions.sfdisk T:/tmp/partitions.sfdisk
+FBK: ucmd (ls /dev/mmcblk2?* | xargs umount) || true
 FBK: ucmd sfdisk /dev/mmcblk2 < /tmp/partitions.sfdisk
 FBK: ucmd mkfs.vfat /dev/mmcblk2p1
 FBK: ucmd mount /dev/mmcblk2p1 /mnt
@@ -85,8 +86,9 @@ FBK: ucmd mount /dev/mmcblk2p3 /mnt
 FBK: acmd tar jx -C /mnt
 FBK: ucp ${NAVQ_ROOTFS_ARCHIVE} T:-
 FBK: sync
+FBK: ucmd mkdir -p /mnt/data
 FBK: ucmd mount /dev/mmcblk2p5 /mnt/data || (mkfs.ext4 /dev/mmcblk2p5 && mount /dev/mmcblk2p5 /mnt/data)
-FBK: ucmd test -f /mnt/data/etc/wpa_supplicant/wpa_supplicant-mlan0.conf || (mkdir -p /mnt/data/etc/wpa_supplicant && cp -a /mnt/etc/wpa_supplicant.conf /mnt/data/etc/wpa_supplicant/wpa_supplicant-mlan0.conf)
+FBK: ucmd test -f /mnt/data/etc/wpa_supplicant/wpa_supplicant-mlan0.conf || test -f /mnt/etc/wpa_supplicant.conf && (mkdir -p /mnt/data/etc/wpa_supplicant && cp -a /mnt/etc/wpa_supplicant.conf /mnt/data/etc/wpa_supplicant/wpa_supplicant-mlan0.conf) || true
 FBK: ucmd umount /mnt/data
 FBK: ucmd umount /mnt
 FBK: done
