@@ -13,6 +13,8 @@ DEPENDS = "libusb1-native libzip-native"
 
 inherit cmake native
 
+EXTRA_OECMAKE += "-DSTATIC=1"
+
 addtask deploy after do_install
 
 do_deploy () {
