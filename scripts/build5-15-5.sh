@@ -51,6 +51,6 @@ echo BBLAYERS += \"\${BSPDIR}/sources/meta-vb-imx8mp\" >> conf/bblayers.conf
 #devtool modify u-boot-imx
 #devtool modify linux-imx
 
-bitbake ${BUILDRECIPE}
+bitbake ${BUILDRECIPE} navq-install uuu-native
 
 finish=`date +%s`; echo "### Build Time = `expr \( $finish - $start \) / 60` minutes"
