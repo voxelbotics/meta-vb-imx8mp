@@ -45,6 +45,7 @@ DISTRO=${DISTRO} MACHINE=imx8mpnavq EULA=yes source ./${SETUP} -b builddir
 
 sed -i 's/^DL_DIR.*$/DL_DIR\ \?=\ \"\/home\/cache\/CACHE\/5.15.5\/downloads\/\"/' conf/local.conf
 echo "SSTATE_DIR = \"/home/cache/CACHE/5.15.5/sstate-cache\"" >> conf/local.conf
+echo "IMAGE_INSTALL:append = \" navq-files \"" >> conf/local.conf
 
 echo BBLAYERS += \"\${BSPDIR}/sources/meta-vb-imx8mp\" >> conf/bblayers.conf
 
