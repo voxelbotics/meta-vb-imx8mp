@@ -1,5 +1,6 @@
 [Unit]
 Description=Mount user data partition
+ConditionKernelCommandLine=mmcblk2
 
 [Mount]
 What=/dev/mmcblk2p5

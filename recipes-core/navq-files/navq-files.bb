@@ -40,6 +40,11 @@ do_install() {
 	install -m 0644 ${WORKDIR}/nxp_modules.conf ${D}${sysconfdir}/modprobe.d
 	ln -sf /data/etc/wpa_supplicant/wpa_supplicant-mlan0.conf ${D}${sysconfdir}/wpa_supplicant/wpa_supplicant-mlan0.conf
 	ln -s /lib/systemd/system/wpa_supplicant@.service ${D}${systemd_system_unitdir}/multi-user.target.wants/wpa_supplicant@mlan0.service
+
+	# populate /data/etc for SD card boot which doesn't have a separate data partition
+	install -d ${D}/data/etc/wpa_supplicant/
+	echo -e "ctrl_interface=/var/run/wpa_supplicant\nctrl_interface_group=0\nupdate_config=1\n\n" > ${D}/data/etc/wpa_supplicant/wpa_supplicant-mlan0.conf
+	echo -e "network={\nssid=\"SSID\"\nscan_ssid=1\npsk=\"password\"\n}\n" >> ${D}/data/etc/wpa_supplicant/wpa_supplicant-mlan0.conf
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
