@@ -1,3 +1,4 @@
+require imx-image.inc
 IMAGE_INSTALL:remove += " \
 		     chromium-ozone-wayland \
 		     "
