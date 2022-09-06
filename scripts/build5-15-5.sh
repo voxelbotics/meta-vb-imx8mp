@@ -77,6 +77,28 @@ get_yocto_info() {
 	echo "$val"
 }
 
+mkdir tmp
+pushd tmp
+if [ "$SETTAG" != "HEAD" ]; then
+	git clone -b imx-5.15.5-vb git@gitlab.com:VoxelBotics/u-boot-imx.git || exit $?
+	git clone -b imx-5.15.5-vb git@gitlab.com:VoxelBotics/linux-imx.git || exit $?
+	for i in u-boot-imx linux-imx; do
+		pushd $i
+		if [ -z $(git tag -l $SETTAG) ]; then
+			echo "Set tag $SETTAG to $i"
+			git tag $SETTAG || exit $?
+			git push origin $SETTAG || exit $?
+		fi
+		if [ "$(basename $(pwd))" == "u-boot-imx" ]; then
+			UBOOT_HASH=$(git rev-list -n 1 $SETTAG)
+		else
+			LINUX_HASH=$(git rev-list -n 1 $SETTAG)
+		fi
+		popd
+	done
+fi
+popd
+
 pushd sources
 git clone -b imx-5.15.5-vb git@gitlab.com:VoxelBotics/meta-vb-imx8mp.git || exit $?
 pushd meta-vb-imx8mp
@@ -111,6 +133,11 @@ echo BBLAYERS += \"\${BSPDIR}/sources/meta-vb-imx8mp\" >> conf/bblayers.conf || 
 echo $RELEASE_VER > ${BUILDDIR}/../sources/meta-vb-imx8mp/recipes-fsl/images/files/vb-release || exit $?
 echo "LOCALVERSION = \"-$RELEASE_VER\"" >> ${BUILDDIR}/../sources/meta-vb-imx8mp/recipes-bsp/u-boot/u-boot-imx_2021.04.bbappend || exit $?
 echo "LOCALVERSION = \"-$RELEASE_VER\"" >> ${BUILDDIR}/../sources/meta-vb-imx8mp/recipes-kernel/linux/linux-imx_5.15.bbappend || exit $?
+
+if [ "$SETTAG" != "HEAD" ]; then
+	echo "SRCREV:pn-u-boot-imx = \"$UBOOT_HASH\"" >> conf/site.conf
+	echo "SRCREV:pn-linux-imx = \"$LINUX_HASH\"" >> conf/site.conf
+fi
 
 #devtool modify u-boot-imx
 #devtool modify linux-imx
