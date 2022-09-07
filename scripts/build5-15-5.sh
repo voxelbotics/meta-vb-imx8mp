@@ -3,6 +3,7 @@ set -x
 
 BUILD_DESKTOP="yes"
 SETTAG="HEAD"
+BRANCH=imx-5.15.5-vb
 
 
 while getopts "k:it:c:" opt; do
@@ -80,8 +81,8 @@ get_yocto_info() {
 mkdir tmp
 pushd tmp
 if [ "$SETTAG" != "HEAD" ]; then
-	git clone -b imx-5.15.5-vb git@gitlab.com:VoxelBotics/u-boot-imx.git || exit $?
-	git clone -b imx-5.15.5-vb git@gitlab.com:VoxelBotics/linux-imx.git || exit $?
+	git clone -b $BRANCH git@gitlab.com:VoxelBotics/u-boot-imx.git || exit $?
+	git clone -b $BRANCH git@gitlab.com:VoxelBotics/linux-imx.git || exit $?
 	for i in u-boot-imx linux-imx; do
 		pushd $i
 		if [ -z $(git tag -l $SETTAG) ]; then
@@ -89,18 +90,13 @@ if [ "$SETTAG" != "HEAD" ]; then
 			git tag $SETTAG || exit $?
 			git push origin $SETTAG || exit $?
 		fi
-		if [ "$(basename $(pwd))" == "u-boot-imx" ]; then
-			UBOOT_HASH=$(git rev-list -n 1 $SETTAG)
-		else
-			LINUX_HASH=$(git rev-list -n 1 $SETTAG)
-		fi
 		popd
 	done
 fi
 popd
 
 pushd sources
-git clone -b imx-5.15.5-vb git@gitlab.com:VoxelBotics/meta-vb-imx8mp.git || exit $?
+git clone -b $BRANCH git@gitlab.com:VoxelBotics/meta-vb-imx8mp.git || exit $?
 pushd meta-vb-imx8mp
 yocto_hash=$(get_yocto_hash)
 yocto_info=$(get_yocto_info)
@@ -135,8 +131,8 @@ echo "LOCALVERSION = \"-$RELEASE_VER\"" >> ${BUILDDIR}/../sources/meta-vb-imx8mp
 echo "LOCALVERSION = \"-$RELEASE_VER\"" >> ${BUILDDIR}/../sources/meta-vb-imx8mp/recipes-kernel/linux/linux-imx_5.15.bbappend || exit $?
 
 if [ "$SETTAG" != "HEAD" ]; then
-	echo "SRCREV:pn-u-boot-imx = \"$UBOOT_HASH\"" >> conf/site.conf
-	echo "SRCREV:pn-linux-imx = \"$LINUX_HASH\"" >> conf/site.conf
+	echo "SRCREV:pn-u-boot-imx = \"$SETTAG\"" >> conf/site.conf
+	echo "SRCREV:pn-linux-imx = \"$SETTAG\"" >> conf/site.conf
 fi
 
 #devtool modify u-boot-imx
