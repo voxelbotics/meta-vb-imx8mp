@@ -1,6 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-SRC_URI = "git://git@gitlab.com/VoxelBotics/linux-imx.git;protocol=ssh;branch=imx-5.15.5-vb"
+SRC_URI = "git://git@gitlab.com/VoxelBotics/linux-imx.git;protocol=ssh;branch=imx-5.15.32-vb"
 SRCREV = "${AUTOREV}"
 
 SRC_URI += " \
@@ -8,7 +8,7 @@ SRC_URI += " \
     file://ov5645tn.cfg \
     file://tja1xxc45.cfg \
     file://pcf2131.cfg \
-    file://gasket_apex.cfg \ 
+    file://gasket_apex.cfg \
 "
 
 do_configure:append () {
