@@ -8,6 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=38ec0c18112e9a92cffc4951661e85a5"
 
 S = "${WORKDIR}/git"
 SRCREV = "uuu_1.4.237"
+PV = "1.4.237+git${SRCPV}"
 
 DEPENDS = "libusb1-native libzip-native"
 
