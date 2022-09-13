@@ -3,7 +3,7 @@ set -x
 
 BUILD_DESKTOP="yes"
 SETTAG="HEAD"
-BRANCH=imx-5.15.5-vb
+BRANCH=imx-5.15.32-vb
 
 
 while getopts "k:it:c:" opt; do
@@ -20,7 +20,7 @@ while getopts "k:it:c:" opt; do
 done
 
 if [ x"$BUILD_DESKTOP" = "xyes" ]; then
-    MANIFEST="imx-5.15.5-1.0.0_desktop.xml"
+    MANIFEST="imx-5.15.32-2.0.0_desktop.xml"
     DISTRO="imx-desktop-xwayland"
     SETUP="imx-setup-desktop.sh"
     IMGNAME="imx-image-desktop"
@@ -28,7 +28,7 @@ if [ x"$BUILD_DESKTOP" = "xyes" ]; then
     BUILDDIR="build-desktop"
     BBMASK=""
 else
-    MANIFEST="imx-5.15.5-1.0.0.xml"
+    MANIFEST="imx-5.15.32-1.0.0.xml"
     DISTRO="fsl-imx-xwayland"
     IMGNAME="imx-image-full"
     BUILDRECIPES="imx-image-full navq-install"
@@ -51,7 +51,6 @@ fi
 # umask 0000
 umask 0002
 
-PATCHES=/home/build/patches/5.15.5-1.0.0
 
 BUILD=`date +%Y%m%d.%H%M`; start=`date +%s`
 #git config --global user.email "kent@emcraft.com"
@@ -61,7 +60,7 @@ BUILD=`date +%Y%m%d.%H%M`; start=`date +%s`
 mkdir -p $BUILDDIR
 cd $BUILDDIR
 
-repo init -u https://source.codeaurora.org/external/imx/imx-manifest -b imx-linux-honister -m ${MANIFEST} || exit $?
+repo init -u https://source.codeaurora.org/external/imx/imx-manifest -b imx-linux-kirkstone -m ${MANIFEST} || exit $?
 repo sync || exit $?
 
 # allow build to not prompt for input
@@ -119,8 +118,8 @@ RELEASE_VER="${SETTAG}_$(date +%m%d%H%M)-${yocto_hash}"
 
 DISTRO=${DISTRO} MACHINE=imx8mpnavq EULA=yes BUILD_DIR=builddir source ./${SETUP} || exit $?
 
-sed -i 's/^DL_DIR.*$/DL_DIR\ \?=\ \"\/home\/cache\/CACHE\/5.15.5\/downloads\/\"/' conf/local.conf || exit $?
-echo "SSTATE_DIR = \"/home/cache/CACHE/5.15.5/sstate-cache\"" >> conf/local.conf || exit $?
+sed -i 's/^DL_DIR.*$/DL_DIR\ \?=\ \"\/home\/cache\/CACHE\/5.15.32\/downloads\/\"/' conf/local.conf || exit $?
+echo "SSTATE_DIR = \"/home/cache/CACHE/5.15.32/sstate-cache\"" >> conf/local.conf || exit $?
 echo "IMAGE_INSTALL:append = \" navq-files \"" >> conf/local.conf || exit $?
 echo "BBMASK += \"$BBMASK\"" >> conf/local.conf || exit $?
 
