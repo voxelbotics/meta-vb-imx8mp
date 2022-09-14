@@ -126,12 +126,16 @@ echo "BBMASK += \"$BBMASK\"" >> conf/local.conf || exit $?
 echo BBLAYERS += \"\${BSPDIR}/sources/meta-vb-imx8mp\" >> conf/bblayers.conf || exit $?
 
 echo $RELEASE_VER > ${BUILDDIR}/../sources/meta-vb-imx8mp/recipes-fsl/images/files/vb-release || exit $?
-echo "LOCALVERSION = \"-$RELEASE_VER\"" >> ${BUILDDIR}/../sources/meta-vb-imx8mp/recipes-bsp/u-boot/u-boot-imx_2021.04.bbappend || exit $?
+echo "LOCALVERSION = \"-$RELEASE_VER\"" >> ${BUILDDIR}/../sources/meta-vb-imx8mp/recipes-bsp/u-boot/u-boot-imx_2022.04.bbappend || exit $?
 echo "LOCALVERSION = \"-$RELEASE_VER\"" >> ${BUILDDIR}/../sources/meta-vb-imx8mp/recipes-kernel/linux/linux-imx_5.15.bbappend || exit $?
 
 if [ "$SETTAG" != "HEAD" ]; then
-	echo "SRCREV:pn-u-boot-imx = \"$SETTAG\"" >> conf/site.conf
-	echo "SRCREV:pn-linux-imx = \"$SETTAG\"" >> conf/site.conf
+        pushd ../tmp/u-boot-imx;hash=$(git show-ref -s $SETTAG);popd
+        echo "# Use hash for tag $SETTAG" >> conf/site.conf
+        echo "SRCREV:pn-u-boot-imx = \"$hash\"" >> conf/site.conf
+        echo "# Use hash for tag $SETTAG" >> conf/site.conf
+        pushd ../tmp/linux-imx;hash=$(git show-ref -s $SETTAG);popd
+        echo "SRCREV:pn-linux-imx = \"$hash\"" >> conf/site.conf
 fi
 
 #devtool modify u-boot-imx
