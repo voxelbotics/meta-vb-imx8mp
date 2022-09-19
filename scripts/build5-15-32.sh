@@ -50,6 +50,7 @@ if [ -f "$SSHKEY" ]; then
 fi
 
 # make sure cache writes have w other access
+# see also BB_DEFAULT_UMASK below
 # umask 0000
 umask 0002
 
@@ -124,6 +125,8 @@ sed -i 's/^DL_DIR.*$/DL_DIR\ \?=\ \"\/home\/cache\/CACHE\/5.15.32\/downloads\/\"
 echo "SSTATE_DIR = \"/home/cache/CACHE/5.15.32/sstate-cache\"" >> conf/local.conf || exit $?
 echo "IMAGE_INSTALL:append = \" navq-files \"" >> conf/local.conf || exit $?
 echo "BBMASK += \"$BBMASK\"" >> conf/local.conf || exit $?
+echo "BB_DEFAULT_UMASK = \"0002\"" >> conf/local.conf || exit $?
+sed -i -e "s/BB_DEFAULT_UMASK =/BB_DEFAULT_UMASK ?=/" ../sources/poky/meta/conf/bitbake.conf
 
 echo BBLAYERS += \"\${BSPDIR}/sources/meta-vb-imx8mp\" >> conf/bblayers.conf || exit $?
 
