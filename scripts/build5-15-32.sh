@@ -8,7 +8,7 @@ BRANCH=imx-5.15.32-vb
 S3BUCKET="vb-files"
 S3BASE="fra1.digitalopenspaces.com"
 
-while getopts "k:it:c:" opt; do
+while getopts "k:it:c:s" opt; do
 	case "$opt" in
 		i) BUILD_DESKTOP="no"
 			;;
@@ -17,6 +17,8 @@ while getopts "k:it:c:" opt; do
 		t) SETTAG=$OPTARG
 			;;
 		c) DST=$OPTARG
+			;;
+		s) S3="yes"
 			;;
 	esac
 done
@@ -174,9 +176,14 @@ if [ -d "$DST" ]; then
 			cp $file $DST/$RELEASE_VER/
 		fi
 	done
+fi
+
+#upload to S3 bucket
+if [ "x${S3}" = "xyes" ]; then
 	# upload to S3 bucket
-	cd $DST/$RELEASE_VER/
-	zip -1 -n bz2 /tmp/${RELEASE_VER}-navqp.zip *
+	cd $BUILDDIR/tmp/deploy/images/imx8mpnavq/
+	zip -1 -n bz2 /tmp/${RELEASE_VER}-navqp.zip ${files[*]}
+	cd -
 	# if version starts with 0. or HEAD, use the "nightly/" folder on S3,
 	# otherwise, use "release/"
 	echo $RELEASE_VER | grep -o "^0.\|^HEAD"
@@ -185,7 +192,6 @@ if [ -d "$DST" ]; then
 	else
 	    path="release"
 	fi
-	cd -
 	s3cmd put /tmp/${RELEASE_VER}-navqp.zip s3://${S3BUCKET}/${path}/
 	if [ $? -eq 0 ]; then
 	    echo "Uploaded to https://${S3BUCKET}.${S3BASE}/${path}/${RELEASE_VER}-navqp.zip"
