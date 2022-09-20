@@ -6,7 +6,7 @@ SETTAG="HEAD"
 BRANCH=imx-5.15.32-vb
 
 S3BUCKET="vb-files"
-S3BASE="fra1.digitalopenspaces.com"
+S3BASE="fra1.digitaloceanspaces.com"
 
 while getopts "k:it:c:s" opt; do
 	case "$opt" in
