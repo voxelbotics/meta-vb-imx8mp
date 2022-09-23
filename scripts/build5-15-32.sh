@@ -160,6 +160,7 @@ files=(
 	imx-image-desktop-imx8mpnavq.wic.bz2
 	imx-image-full-imx8mpnavq.tar.bz2
 	imx-image-full-imx8mpnavq.wic.bz2
+	uuu
 	navq-dbg.uuu
 	navq-install-desktop.uuu
 	navq-install.uuu
