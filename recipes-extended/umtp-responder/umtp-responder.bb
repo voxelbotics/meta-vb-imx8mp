@@ -7,6 +7,7 @@ SRC_URI = "git://github.com/viveris/uMTP-Responder.git;protocol=https \
            file://umtprd.conf \
            "
 SRCREV = "umtprd-1.3.6"
+PV = "1.3.6+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 

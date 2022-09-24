@@ -42,7 +42,7 @@ IMAGE_POSTPROCESS_COMMAND += " build_uimage; "
 
 build_uimage() {
 	mkimage -n 'Secure Boot Install' -A arm -O linux -T ramdisk -C gzip -d ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.cpio.gz ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.uImage
-	ln -sf ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.uImage ${DEPLOY_DIR_IMAGE}/${IMAGE_BASENAME}.uImage
+	ln -sf ${IMAGE_NAME}.uImage ${DEPLOY_DIR_IMAGE}/${IMAGE_BASENAME}.uImage
 
 	# generate partition table script
 	cat << EOF > ${DEPLOY_DIR_IMAGE}/partitions.sfdisk

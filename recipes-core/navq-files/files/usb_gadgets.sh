@@ -80,7 +80,7 @@ function launch_mtp() {
     echo 0x0100 > idProduct
     echo 0x1D6B > idVendor
 
-    cat /sys/devices/soc0/serial > strings/0x409/serialnumber
+    cat /sys/devices/soc0/serial_number > strings/0x409/serialnumber
 
     echo "VoxelBotics" > strings/0x409/manufacturer
     echo "Navq+" > strings/0x409/product
