@@ -15,6 +15,8 @@ DEPENDS = "libusb1-native libzip-native"
 inherit cmake native
 
 EXTRA_OECMAKE += "-DSTATIC=1"
+# We need an exportable binary, don't hardcode dynlinker path.
+BUILD_LDFLAGS:remove = "-Wl,--dynamic-linker=${UNINATIVE_LOADER}"
 
 addtask deploy after do_install
 
