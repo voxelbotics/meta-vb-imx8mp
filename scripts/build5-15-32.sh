@@ -148,6 +148,7 @@ fi
 #devtool modify u-boot-imx
 #devtool modify linux-imx
 
+bitbake uuu-native -c cleansstate
 bitbake ${BUILDRECIPES} uuu-native || exit $?
 
 echo "$yocto_info" >> $BUILDDIR/tmp/deploy/images/imx8mpnavq/$IMGNAME-imx8mpnavq.manifest || exit $?
