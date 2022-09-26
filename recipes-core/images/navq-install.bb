@@ -3,7 +3,7 @@
 DESCRIPTION = "Small initramfs for manufacturing of secure-boot enabled i.MX 8M boards"
 LICENSE = "CLOSED"
 
-NAVQ_ROOTFS_ARCHIVE ??= "imx-image-full-imx8mpnavq.tar.bz2"
+NAVQ_ROOTFS_ARCHIVE ??= "navq-rootfs-imx8mpnavq.tar.bz2"
 BOOT_PARTION_SIZE ??= "128M"
 ROOTFS_PARTION_SIZE ??= "5G"
 
@@ -73,6 +73,8 @@ FB: acmd booti \$loadaddr \$initrd_addr \$fdt_addr
 # upload and install boot and rootfs images
 FBK: ucp imx-boot-imx8mpnavq-sd.bin-flash_evk T:/tmp/imx-boot-imx8mpnavq-sd.bin-flash_evk
 FBK: ucmd dd if=/tmp/imx-boot-imx8mpnavq-sd.bin-flash_evk of=/dev/mmcblk2 bs=1k seek=32
+# clear U-Boot env
+FBK: ucmd dd if=/dev/zero of=/dev/mmcblk2 bs=1k seek=4096 count=1
 FBK: ucp partitions.sfdisk T:/tmp/partitions.sfdisk
 FBK: ucmd (ls /dev/mmcblk2?* | xargs umount) || true
 FBK: ucmd sfdisk /dev/mmcblk2 < /tmp/partitions.sfdisk

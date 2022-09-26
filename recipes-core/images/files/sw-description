@@ -1,0 +1,149 @@
+software =
+{
+	version = "@@SWU_VERSION@@";
+	hardware-compatibility: [ "@@SWU_HWCOMPAT@@" ];
+	@@SWU_BOARD@@ = {
+	  stable:
+	  {
+		copy1:
+		{
+			partitions: (
+			{
+				type = "diskformat";
+				device = "/dev/mmcblk2p1";
+
+				properties: {
+					fstype = "vfat";
+					force = "true";
+				}
+			},
+			{
+				type = "diskformat";
+				device = "/dev/mmcblk2p3";
+
+				properties: {
+					fstype = "ext4";
+					force = "true";
+				}
+			}
+			);
+			images: (
+			{
+				name = "bootloader";
+				filename = "@@SWU_UBOOT_FILE@@";
+				version = "@@SWU_UBOOT_VERSION@@";
+				install-if-different = true;
+				device = "/dev/mmcblk2";
+				offset = "32K";
+				sha256 = "$swupdate_get_sha256(@@SWU_UBOOT_FILE@@)";
+			}
+			);
+			files: (
+			{
+				filename = "Image";
+				device = "/dev/mmcblk2p1";
+				path = "/Image";
+				filesystem = "vfat";
+				preserve-attributes = true;
+				sha256 = "$swupdate_get_sha256(Image)";
+
+			},
+			{
+				filename = "@@KERNEL_DEVICETREE_BASENAME@@.dtb";
+				device = "/dev/mmcblk2p1";
+				path = "/@@KERNEL_DEVICETREE_BASENAME@@.dtb";
+				filesystem = "vfat";
+				preserve-attributes = true;
+				sha256 = "$swupdate_get_sha256(@@KERNEL_DEVICETREE_BASENAME@@.dtb)";
+
+			},
+			{
+				filename = "@@SWU_ROOTFS_FILE@@";
+				type = "archive";
+				device = "/dev/mmcblk2p3";
+				path = "/";
+				filesystem = "ext4";
+				preserve-attributes = true;
+				sha256 = "$swupdate_get_sha256(@@SWU_ROOTFS_FILE@@)";
+
+			}
+			);
+			uboot: (
+			{
+				name = "mmcpart";
+				value = "1";
+			},
+			);
+		};
+		copy2:
+		{
+			partitions: (
+			{
+				type = "diskformat";
+				device = "/dev/mmcblk2p2";
+
+				properties: {
+					fstype = "vfat";
+					force = "true";
+				}
+			},
+			{
+				type = "diskformat";
+				device = "/dev/mmcblk2p4";
+
+				properties: {
+					fstype = "ext4";
+					force = "true";
+				}
+			}
+			);
+			images: (
+			{
+				name = "bootloader";
+				filename = "@@SWU_UBOOT_FILE@@";
+				version = "@@SWU_UBOOT_VERSION@@";
+				install-if-different = true;
+				device = "/dev/mmcblk2";
+				offset = "32K";
+				sha256 = "$swupdate_get_sha256(@@SWU_UBOOT_FILE@@)";
+			}
+			);
+			files: (
+			{
+				filename = "Image";
+				device = "/dev/mmcblk2p2";
+				path = "/Image";
+				filesystem = "vfat";
+				preserve-attributes = true;
+				sha256 = "$swupdate_get_sha256(Image)";
+
+			},
+			{
+				filename = "@@KERNEL_DEVICETREE_BASENAME@@.dtb";
+				device = "/dev/mmcblk2p2";
+				path = "/@@KERNEL_DEVICETREE_BASENAME@@.dtb";
+				filesystem = "vfat";
+				preserve-attributes = true;
+				sha256 = "$swupdate_get_sha256(@@KERNEL_DEVICETREE_BASENAME@@.dtb)";
+
+			},
+			{
+				filename = "@@SWU_ROOTFS_FILE@@";
+				type = "archive";
+				device = "/dev/mmcblk2p4";
+				path = "/";
+				filesystem = "ext4";
+				preserve-attributes = true;
+				sha256 = "$swupdate_get_sha256(@@SWU_ROOTFS_FILE@@)";
+			}
+			);
+			uboot: (
+			{
+				name = "mmcpart";
+				value = "2";
+			},
+			);
+		};
+	  };
+	};
+}

@@ -120,6 +120,10 @@ popd
 popd
 RELEASE_VER="${SETTAG}_$(date +%m%d%H%M)-${yocto_hash}"
 
+cd sources
+git clone -b imx-5.15.32-vb git@gitlab.com:VoxelBotics/meta-vb-imx8mp.git
+git clone -b kirkstone https://github.com/sbabic/meta-swupdate.git
+cd ..
 
 DISTRO=${DISTRO} MACHINE=imx8mpnavq EULA=yes BUILD_DIR=builddir source ./${SETUP} || exit $?
 
@@ -131,6 +135,7 @@ echo "BB_DEFAULT_UMASK = \"0002\"" >> conf/local.conf || exit $?
 sed -i -e "s/BB_DEFAULT_UMASK =/BB_DEFAULT_UMASK ?=/" ../sources/poky/meta/conf/bitbake.conf
 
 echo BBLAYERS += \"\${BSPDIR}/sources/meta-vb-imx8mp\" >> conf/bblayers.conf || exit $?
+echo BBLAYERS += \"\${BSPDIR}/sources/meta-swupdate\" >> conf/bblayers.conf || exit $?
 
 echo $RELEASE_VER > ${BUILDDIR}/../sources/meta-vb-imx8mp/recipes-fsl/images/files/vb-release || exit $?
 echo "LOCALVERSION = \"-$RELEASE_VER\"" >> ${BUILDDIR}/../sources/meta-vb-imx8mp/recipes-bsp/u-boot/u-boot-imx_2022.04.bbappend || exit $?
@@ -149,7 +154,7 @@ fi
 #devtool modify linux-imx
 
 bitbake uuu-native -c cleansstate
-bitbake ${BUILDRECIPES} uuu-native || exit $?
+bitbake ${BUILDRECIPES} uuu-native navq-swu || exit $?
 
 echo "$yocto_info" >> $BUILDDIR/tmp/deploy/images/imx8mpnavq/$IMGNAME-imx8mpnavq.manifest || exit $?
 
