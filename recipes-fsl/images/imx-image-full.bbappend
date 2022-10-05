@@ -16,4 +16,5 @@ IMAGE_INSTALL:append += " \
 
 APT_GET_EXTRA_PACKAGES += " \
 		       v4l-utils \
+		       iw	 \
 		       "
