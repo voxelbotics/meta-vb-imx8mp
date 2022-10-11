@@ -2,7 +2,7 @@
 set -x
 
 BUILD_DESKTOP="yes"
-SETTAG="HEAD"
+SETTAG="head"
 BRANCH=imx-5.15.32-vb
 
 S3BUCKET="vb-files"
@@ -84,7 +84,7 @@ get_yocto_info() {
 
 mkdir tmp
 pushd tmp
-if [ "$SETTAG" != "HEAD" ]; then
+if [ "$SETTAG" != "head" ]; then
 	git clone -b $BRANCH git@gitlab.com:VoxelBotics/u-boot-imx.git || exit $?
 	git clone -b $BRANCH git@gitlab.com:VoxelBotics/linux-imx.git || exit $?
 	for i in u-boot-imx linux-imx; do
@@ -101,10 +101,11 @@ popd
 
 pushd sources
 git clone -b $BRANCH git@gitlab.com:VoxelBotics/meta-vb-imx8mp.git || exit $?
+git clone -b kirkstone https://github.com/sbabic/meta-swupdate.git
 pushd meta-vb-imx8mp
 yocto_hash=$(get_yocto_hash)
 yocto_info=$(get_yocto_info)
-if [ "$SETTAG" != "HEAD" ]; then
+if [ "$SETTAG" != "head" ]; then
 	if [ -z $(git tag -l $SETTAG) ]; then
 		echo "Set tag $SETTAG"
 		git tag $SETTAG || exit $?
@@ -118,12 +119,7 @@ else
 fi
 popd
 popd
-RELEASE_VER="${SETTAG}_$(date +%m%d%H%M)-${yocto_hash}"
-
-cd sources
-git clone -b imx-5.15.32-vb git@gitlab.com:VoxelBotics/meta-vb-imx8mp.git
-git clone -b kirkstone https://github.com/sbabic/meta-swupdate.git
-cd ..
+RELEASE_VER="${SETTAG}-$(date +%m%d%H%M)-${yocto_hash}"
 
 DISTRO=${DISTRO} MACHINE=imx8mpnavq EULA=yes BUILD_DIR=builddir source ./${SETUP} || exit $?
 
@@ -133,6 +129,8 @@ echo "IMAGE_INSTALL:append = \" navq-files \"" >> conf/local.conf || exit $?
 echo "BBMASK += \"$BBMASK\"" >> conf/local.conf || exit $?
 echo "BB_DEFAULT_UMASK = \"0002\"" >> conf/local.conf || exit $?
 sed -i -e "s/BB_DEFAULT_UMASK =/BB_DEFAULT_UMASK ?=/" ../sources/poky/meta/conf/bitbake.conf
+sed -i -e "s/PACKAGE_CLASSES = \"package_rpm\"/PACKAGE_CLASSES ?= \"package_rpm\"/" conf/local.conf
+sed -i -e "s/PACKAGE_CLASSES = \"package_deb\"/PACKAGE_CLASSES ?= \"package_deb\"/" conf/local.conf
 
 echo BBLAYERS += \"\${BSPDIR}/sources/meta-vb-imx8mp\" >> conf/bblayers.conf || exit $?
 echo BBLAYERS += \"\${BSPDIR}/sources/meta-swupdate\" >> conf/bblayers.conf || exit $?
@@ -141,7 +139,7 @@ echo $RELEASE_VER > ${BUILDDIR}/../sources/meta-vb-imx8mp/recipes-fsl/images/fil
 echo "LOCALVERSION = \"-$RELEASE_VER\"" >> ${BUILDDIR}/../sources/meta-vb-imx8mp/recipes-bsp/u-boot/u-boot-imx_2022.04.bbappend || exit $?
 echo "LOCALVERSION = \"-$RELEASE_VER\"" >> ${BUILDDIR}/../sources/meta-vb-imx8mp/recipes-kernel/linux/linux-imx_5.15.bbappend || exit $?
 
-if [ "$SETTAG" != "HEAD" ]; then
+if [ "$SETTAG" != "head" ]; then
         pushd ../tmp/u-boot-imx;hash=$(git show-ref -s $SETTAG);popd
         echo "# Use hash for tag $SETTAG" >> conf/site.conf
         echo "SRCREV:pn-u-boot-imx = \"$hash\"" >> conf/site.conf
@@ -153,8 +151,11 @@ fi
 #devtool modify u-boot-imx
 #devtool modify linux-imx
 
+export BB_ENV_PASSTHROUGH_ADDITIONS="PACKAGE_CLASSES"
 bitbake uuu-native -c cleansstate
-bitbake ${BUILDRECIPES} uuu-native navq-swu || exit $?
+bitbake ${BUILDRECIPES} uuu-native || exit $?
+# Only builds with package_ipk
+PACKAGE_CLASSES="package_ipk" bitbake navq-swu || exit $?
 
 echo "$yocto_info" >> $BUILDDIR/tmp/deploy/images/imx8mpnavq/$IMGNAME-imx8mpnavq.manifest || exit $?
 
@@ -193,7 +194,7 @@ if [ "x${S3}" = "xyes" ]; then
 	cd -
 	# if version starts with 0. or HEAD, use the "nightly/" folder on S3,
 	# otherwise, use "release/"
-	echo $RELEASE_VER | grep -o "^0.\|^HEAD"
+	echo $RELEASE_VER | grep -o "^0.\|^head"
 	if [ $? -eq 0 ]; then
 	    path="nightly"
 	else
