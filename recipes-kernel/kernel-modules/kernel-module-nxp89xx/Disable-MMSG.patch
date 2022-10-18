@@ -1,0 +1,13 @@
+diff --git a/mxm_wifiex/wlan_src/mlinux/moal_init.c b/mxm_wifiex/wlan_src/mlinux/moal_init.c
+index 4003558..1956f00 100644
+--- a/mlinux/moal_init.c
++++ b/mlinux/moal_init.c
+@@ -276,7 +276,7 @@ static t_u16 inact_tmo;
+ #ifdef DEBUG_LEVEL2
+ #define DEFAULT_DEBUG_MASK (0xffffffff)
+ #else
+-#define DEFAULT_DEBUG_MASK (MMSG | MFATAL | MERROR | MREG_D)
++#define DEFAULT_DEBUG_MASK (MFATAL | MERROR | MREG_D)
+ #endif /* DEBUG_LEVEL2 */
+ t_u32 drvdbg = DEFAULT_DEBUG_MASK;
+ 
