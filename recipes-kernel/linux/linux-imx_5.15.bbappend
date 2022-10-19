@@ -1,6 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-SRC_URI = "git://git@gitlab.com/VoxelBotics/linux-imx.git;protocol=ssh;branch=imx-5.10.72-vb"
+SRC_URI = "git://git@gitlab.com/VoxelBotics/linux-imx.git;protocol=ssh;branch=imx-5.15.5-vb"
 SRCREV = "${AUTOREV}"
 
 SRC_URI += " \
@@ -12,5 +12,5 @@ SRC_URI += " \
 "
 
 do_configure:append () {
-    ${S}/scripts/kconfig/merge_config.sh -m -O ${WORKDIR}/build ${WORKDIR}/build/.config ${WORKDIR}/*.cfg
+    ${S}/scripts/kconfig/merge_config.sh -m -O ${B} ${B}/.config ${WORKDIR}/*.cfg
 }
