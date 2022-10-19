@@ -1,0 +1,40 @@
+From a4c1fc72882a58ad0e917a6fd2134175515083e0 Mon Sep 17 00:00:00 2001
+From: Dmitry Konyshev <probables@emcraft.com>
+Date: Mon, 14 Sep 2020 12:44:26 +0300
+Subject: [PATCH] Allow only .swu files to be copied to storage
+
+---
+ src/mtp.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/src/mtp.c b/src/mtp.c
+index 582a01e..6ecb8a7 100644
+--- a/src/mtp.c
++++ b/src/mtp.c
+@@ -207,6 +207,9 @@ int parse_incomming_dataset(mtp_ctx * ctx,void * datain,int size,uint32_t * newh
+ 			objectformat = peek(dataset_ptr, 0x04, 2);     // ObjectFormat Code
+ 			if(objectformat==MTP_FORMAT_ASSOCIATION)
+ 			{
++				PRINT_DEBUG("Deny directory creation\n");
++				return MTP_RESPONSE_ACCESS_DENIED;
++
+ 				objectsize = peek(dataset_ptr, 0x08, 4);   // Object Compressed Size
+ 				//parent = peek(dataset_ptr,0x26, 4);      // Parent Object (NR)
+ #ifdef DEBUG
+@@ -304,6 +307,13 @@ int parse_incomming_dataset(mtp_ctx * ctx,void * datain,int size,uint32_t * newh
+ 				}
+ 				unicode2charstring(tmp_str, unicode_str, sizeof(tmp_str));
+ 
++				int sz = strlen(tmp_str);
++
++				if( sz < 4 || memcmp(tmp_str + sz - 4, ".swu", 4) ) {
++					PRINT_DEBUG("Deny copy due to filename '%s'\n", tmp_str);
++					return MTP_RESPONSE_SPECIFICATION_BY_FORMAT_UNSUPPORTED;
++				}
++
+ 				PRINT_DEBUG("MTP_OPERATION_SEND_OBJECT_INFO : 0x%x objectformat Size %d, Parent 0x%.8x, type: %x, strlen %d str:%s",objectformat,objectsize,parent_handle,type,string_len,tmp_str);
+ 
+ 				entry = get_entry_by_handle_and_storageid(ctx->fs_db, parent_handle,storage_id);
+-- 
+2.21.3
+

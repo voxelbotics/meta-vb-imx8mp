@@ -1,0 +1,25 @@
+From 1162521f8d1636fc0bca6ae500ea53b72c4214b4 Mon Sep 17 00:00:00 2001
+From: Dmitry Konyshev <dmitry.konyshev@neatorobotics.com>
+Date: Mon, 27 Dec 2021 21:21:39 +0300
+Subject: [PATCH] LEGO-6262: Fix potential parent directory access in MTP
+ server
+
+---
+ src/mtp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/mtp.c b/src/mtp.c
+index 6ecb8a7..848eb9a 100644
+--- a/src/mtp.c
++++ b/src/mtp.c
+@@ -309,8 +309,8 @@ int parse_incomming_dataset(mtp_ctx * ctx,void * datain,int size,uint32_t * newh
+ 
+ 				int sz = strlen(tmp_str);
+ 
+-				if( sz < 4 || memcmp(tmp_str + sz - 4, ".swu", 4) ) {
+-					PRINT_DEBUG("Deny copy due to filename '%s'\n", tmp_str);
++				if( sz < 4 || memcmp(tmp_str + sz - 4, ".swu", 4) || memcmp(tmp_str, "../", 3) == 0 ) {
++					PRINT_DEBUG("Deny copy due to filename '%s' or relative path\n", tmp_str);
+ 					return MTP_RESPONSE_SPECIFICATION_BY_FORMAT_UNSUPPORTED;
+ 				}
+ 
