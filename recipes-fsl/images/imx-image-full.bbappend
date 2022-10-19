@@ -3,13 +3,14 @@ IMAGE_INSTALL:remove += " \
 		     "
 
 IMAGE_INSTALL:append += " \
-                         opencv \     
+                         opencv \
                          opencv-apps \
                          opencv-samples \
                          python3-opencv \
                          tensorflow-lite-vx-delegate \
                          packagegroup-imx-ml-desktop \
                          umtp-responder \
+			 navq-files \
                         "
 
 APT_GET_EXTRA_PACKAGES += " \
