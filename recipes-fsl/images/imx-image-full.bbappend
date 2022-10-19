@@ -9,6 +9,7 @@ IMAGE_INSTALL:append += " \
                          python3-opencv \
                          tensorflow-lite-vx-delegate \
                          packagegroup-imx-ml-desktop \
+                         umtp-responder \
                         "
 
 APT_GET_EXTRA_PACKAGES += " \
