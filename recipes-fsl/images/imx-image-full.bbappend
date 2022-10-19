@@ -1,8 +1,8 @@
-IMAGE_INSTALL_remove += " \
+IMAGE_INSTALL:remove += " \
 		     chromium-ozone-wayland \
 		     "
 
-IMAGE_INSTALL_append += " \
+IMAGE_INSTALL:append += " \
                          opencv \     
                          opencv-apps \
                          opencv-samples \
