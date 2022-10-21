@@ -3,6 +3,7 @@ DESCRIPTION = "NAVQ+ upgrade image in SWU format"
 SECTION = ""
 
 LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
 # Add all local files to be added to the SWU
 # sw-description must always be in the list.
