@@ -1,7 +1,7 @@
 # Copyright (C) 2022 Voxelbotics
 
 DESCRIPTION = "Small initramfs for manufacturing of secure-boot enabled i.MX 8M boards"
-LICENSE = "CLOSED"
+LICENSE = "MIT"
 
 NAVQ_ROOTFS_ARCHIVE ??= "navq-rootfs-imx8mpnavq.tar.bz2"
 BOOT_PARTION_SIZE ??= "128M"

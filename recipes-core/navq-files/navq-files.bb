@@ -1,7 +1,7 @@
 # Copyrigh (C) 2022 VoxelBotics
 # Additional rootfs files
 
-LICENSE = "CLOSED"
+LICENSE = "MIT"
 
 SRC_URI = " \
 	file://usb-gadgets.service \

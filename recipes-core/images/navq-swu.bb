@@ -2,7 +2,7 @@
 DESCRIPTION = "NAVQ+ upgrade image in SWU format"
 SECTION = ""
 
-LICENSE = "CLOSED"
+LICENSE = "MIT"
 
 # Add all local files to be added to the SWU
 # sw-description must always be in the list.

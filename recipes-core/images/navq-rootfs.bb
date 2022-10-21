@@ -2,7 +2,7 @@
 DESCRIPTION = "NAVQ+ rootfs image"
 SECTION = ""
 
-LICENSE = "CLOSED"
+LICENSE = "MIT"
 
 IMAGE_FSTYPES = "tar.bz2"
 
