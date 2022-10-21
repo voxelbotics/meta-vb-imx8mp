@@ -1,0 +1,6 @@
+[Match]
+type=wifi
+
+[Network]
+DHCP=yes
+DNS=8.8.8.8

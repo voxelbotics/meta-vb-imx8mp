@@ -28,7 +28,7 @@ if [ x"$BUILD_DESKTOP" = "xyes" ]; then
     DISTRO="imx-desktop-xwayland"
     SETUP="imx-setup-desktop.sh"
     IMGNAME="imx-image-desktop"
-    BUILDRECIPES="imx-image-desktop navq-install-desktop"
+    BUILDRECIPES="imx-image-desktop navq-install-desktop imx-image-desktop-ros"
     BUILDDIR="build-desktop"
     BBMASK=""
 else
