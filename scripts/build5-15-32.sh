@@ -85,8 +85,8 @@ get_yocto_info() {
 mkdir tmp
 pushd tmp
 if [ "$SETTAG" != "head" ]; then
-	git clone -b $BRANCH git@gitlab.com:VoxelBotics/u-boot-imx.git || exit $?
-	git clone -b $BRANCH git@gitlab.com:VoxelBotics/linux-imx.git || exit $?
+	git clone -b $BRANCH git@github.com:voxelbotics/u-boot-imx.git || exit $?
+	git clone -b $BRANCH git@github.com:voxelbotics/linux-imx.git || exit $?
 	for i in u-boot-imx linux-imx; do
 		pushd $i
 		if [ -z $(git tag -l $SETTAG) ]; then
