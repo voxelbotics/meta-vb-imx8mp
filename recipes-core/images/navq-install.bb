@@ -38,8 +38,13 @@ IMAGE_ROOTFS_EXTRA_SPACE = "0"
 COMPATIBLE_HOST ?= "aarch64-.*-linux"
 SCRIPT_NAME ?= "navq-install"
 
-#ROOTFS_POSTPROCESS_COMMAND += " custom_files; "
+ROOTFS_POSTPROCESS_COMMAND += " custom_files; "
 IMAGE_POSTPROCESS_COMMAND += " build_uimage; "
+
+custom_files() {
+	# don't need to mount /data in installation initrd
+	rm -f ${IMAGE_ROOTFS}/lib/systemd/system/data.mount
+}
 
 build_uimage() {
 	mkimage -n 'Secure Boot Install' -A arm -O linux -T ramdisk -C gzip -d ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.cpio.gz ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.uImage
