@@ -100,7 +100,7 @@ fi
 popd
 
 pushd sources
-git clone -b $BRANCH git@gitlab.com:VoxelBotics/meta-vb-imx8mp.git || exit $?
+git clone -b $BRANCH git@github.com:voxelbotics/meta-vb-imx8mp.git || exit $?
 git clone -b kirkstone https://github.com/sbabic/meta-swupdate.git
 pushd meta-vb-imx8mp
 yocto_hash=$(get_yocto_hash)
