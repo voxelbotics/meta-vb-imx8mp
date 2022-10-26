@@ -10,6 +10,8 @@ SRC_URI = " \
 	file://nxp_depmod.conf \
 	file://nxp_modules.conf \
 	file://data.mount \
+	file://install_update.sh \
+	file://rollback_update.sh \
 "
 
 do_install() {
@@ -45,6 +47,16 @@ do_install() {
 	install -d ${D}/data/etc/wpa_supplicant/
 	echo -e "ctrl_interface=/var/run/wpa_supplicant\nctrl_interface_group=0\nupdate_config=1\n\n" > ${D}/data/etc/wpa_supplicant/wpa_supplicant-mlan0.conf
 	echo -e "network={\nssid=\"SSID\"\nscan_ssid=1\npsk=\"password\"\n}\n" >> ${D}/data/etc/wpa_supplicant/wpa_supplicant-mlan0.conf
+
+	# access to U-Boot env
+	echo "/dev/mmcblk2    0x400000        0x4000" > ${D}${sysconfdir}/fw_env.config
+	ln -sf u-boot-imx-initial-env ${D}${sysconfdir}/u-boot-initial-env
+
+	echo "${SWU_BOARD} ${SWU_HWCOMPAT}" > ${D}${sysconfdir}/hwrevision
+	echo -e "bootloader\t\t${SWU_UBOOT_VERSION}" > ${D}${sysconfdir}/sw-versions
+
+	install -m 0755 ${WORKDIR}/install_update.sh ${D}${sbindir}
+	install -m 0755 ${WORKDIR}/rollback_update.sh ${D}${sbindir}
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"

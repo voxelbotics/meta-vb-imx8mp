@@ -14,6 +14,7 @@ IMAGE_INSTALL:append += " \
 			 navq-files \
                         "
 
-APT_GET_EXTRA_PACKAGES += " \
+APTGET_EXTRA_PACKAGES += " \
 		       v4l-utils \
+		       iw	 \
 		       "
