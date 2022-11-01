@@ -1,0 +1,31 @@
+diff --git a/pseudo.c b/pseudo.c
+index 0f5850e..b2a0dd5 100644
+--- a/pseudo.c
++++ b/pseudo.c
+@@ -1087,9 +1087,15 @@ pseudo_db_check(int fix) {
+ 			int fixup_needed = 0;
+ 			pseudo_debug(PDBGF_DB, "Checking <%s>\n", m->path);
+ 			if (lstat(m->path, &buf)) {
+-				errors = EXIT_FAILURE;
+-				pseudo_diag("can't stat <%s>\n", m->path);
+-				continue;
++				if (!fix) {
++					pseudo_diag("can't stat <%s>\n", m->path);
++					errors = EXIT_FAILURE;
++					continue;
++				} else {
++					pseudo_debug(PDBGF_DB, "can't stat <%s>\n", m->path);
++					fixup_needed = 2;
++					goto do_fixup;
++				}
+ 			}
+ 			/* can't check for device type mismatches, uid/gid, or
+ 			 * permissions, because those are the very things we
+@@ -1125,6 +1125,7 @@ pseudo_db_check(int fix) {
+ 					S_ISDIR(m->mode));
+ 				fixup_needed = 2;
+ 			}
++			do_fixup:
+ 			if (fixup_needed) {
+ 				/* in fixup mode, either delete (mismatches) or
+ 				 * correct (dev/ino).
