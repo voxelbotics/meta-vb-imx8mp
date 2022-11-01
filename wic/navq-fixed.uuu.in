@@ -1,0 +1,58 @@
+uuu_version 1.0.1
+
+# boot installation initrd image
+SDPS: boot -f flash.bin
+FB: ucmd setenv fastboot_buffer $loadaddr
+FB: download -f navq-mfgtool.kernel
+FB: ucmd setenv fastboot_buffer $fdt_addr
+FB: download -f navq-mfgtool.dtb
+FB: ucmd setenv fastboot_buffer $initrd_addr
+FB: download -f navq-mfgtool.initrd
+FB: ucmd run mmcargs
+FB: ucmd setenv bootargs $bootargs quiet=quiet mfgboot
+FB: acmd booti $loadaddr $initrd_addr $fdt_addr
+
+# create GPT partitions
+FBK: ucmd (ls /dev/mmcblk2?* | xargs umount) || true
+FBK: ucmd mkfifo /tmp/partitions.sfdisk || true
+FBK: acmd sfdisk /dev/mmcblk2 < /tmp/partitions.sfdisk
+FBK: ucp partitions.sfdisk T:/tmp/partitions.sfdisk
+FBK: sync
+
+# upload and install bootloader
+FBK: ucmd mkfifo /tmp/flash.bin || true
+FBK: acmd dd if=/tmp/flash.bin of=/dev/mmcblk2 bs=1k seek=32
+FBK: ucp flash.bin T:/tmp/flash.bin
+FBK: sync
+
+# create filesystems
+FBK: ucmd mkfs.vfat /dev/mmcblk2p1
+FBK: ucmd mkfs.ext4 -F /dev/mmcblk2p2
+FBK: ucmd mkfs.ext4 -F /dev/mmcblk2p3
+
+# mount partitions
+FBK: ucmd mount /dev/mmcblk2p2 /mnt
+FBK: ucmd mkdir -p /mnt/boot && mount /dev/mmcblk2p1 /mnt/boot
+FBK: ucmd mkdir -p /mnt/data && mount /dev/mmcblk2p3 /mnt/data
+
+# untar files (excluding boot/Image as vfat doesn't support symlinks)
+FBK: acmd tar jx -C /mnt --exclude=./boot/Image -f - || true
+FBK: ucp rootfs.tar.bz2 T:-
+FBK: sync
+
+# rename kernel image file (vfat ignores symlinks)
+FBK: ucmd mv /mnt/boot/Image-* /mnt/boot/Image
+
+# install fstab
+FBK: ucp fstab T:/mnt/etc/fstab
+FBK: ucmd sed -i 's/mmcblk1/mmcblk2/' /mnt/etc/fstab
+
+# initialize u-boot env
+FBK: ucmd dd if=/dev/zero of=/dev/mmcblk2 bs=1k seek=4096 count=1
+FBK: ucmd fw_setenv mmcroot "/dev/mmcblk2p2 rootwait rw"
+
+# cleanup
+FBK: ucmd umount /mnt/data
+FBK: ucmd umount /mnt/boot
+FBK: ucmd umount /mnt
+FBK: done

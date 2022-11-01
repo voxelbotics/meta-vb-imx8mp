@@ -1,0 +1,23 @@
+# short-description: Create SD card / EMMC image with redundant boot partitioning
+# long-description:
+# Create an image that can be written onto a SD card using dd for use
+# with i.MX SoC family
+# It uses u-boot + other binaries gathered together on imx-boot file
+#
+# The disk layout used is:
+#  - ---------- -------------- -------------- --------------
+# | | imx-boot |     boot     |    rootfs    |     data     |
+#  - ---------- -------------- -------------- --------------
+# ^ ^          ^              ^              ^              ^
+# | |          |              |              |              |
+# 0 |        16M              |              |            16M + (BOOT_PARTITION_SIZE + ROOTFS_PARTITION_SIZE) + DATA_PARTITION_SIZE
+#   |                         |            16M + BOOT_PARTITION_SIZE + ROOTFS_PARTITION_SIZE
+#   |                       16M + BOOT_PARTITION_SIZE
+#   ${IMX_BOOT_SEEK} 32 or 33kiB, see reference manual
+
+part u-boot --source rawcopy --sourceparams="file=imx-boot" --ondisk mmcblk --no-table --align ${IMX_BOOT_SEEK}
+part /boot --source bootimg-partition --ondisk mmcblk1 --fstype=vfat --part-name boot --active --align 16384 --fixed-size ${BOOT_PARTITION_SIZE}
+part / --source rootfs --ondisk mmcblk1 --fstype=ext4 --part-name rootfs --align 8192 --fixed-size ${ROOTFS_PARTITION_SIZE} --exclude-path data
+part /data --source rootfs --ondisk mmcblk1 --fstype=ext4 --part-name data --align 8192 --fixed-size ${DATA_PARTITION_SIZE} --change-directory data
+
+bootloader --ptable gpt

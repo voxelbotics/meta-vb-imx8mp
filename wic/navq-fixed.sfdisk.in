@@ -1,0 +1,5 @@
+label: gpt
+
+/dev/mmcblk2p1 : start=16384, size=${BOOT_PARTITION_SIZE}, type=L, name="boot"
+/dev/mmcblk2p2 : size=${ROOTFS_PARTITION_SIZE}, type=L, name="rootfs"
+/dev/mmcblk2p3 : type=L, name="data"
