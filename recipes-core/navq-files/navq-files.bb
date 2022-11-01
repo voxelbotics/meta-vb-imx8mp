@@ -10,7 +10,6 @@ SRC_URI = " \
 	file://wireless.network \
 	file://nxp_depmod.conf \
 	file://nxp_modules.conf \
-	file://data.mount \
 	file://install_update.sh \
 	file://rollback_update.sh \
 "
@@ -27,10 +26,6 @@ do_install() {
 	install -d ${D}${sbindir}
 	install -d ${D}${systemd_system_unitdir}/multi-user.target.wants/
 	install -d ${D}${systemd_system_unitdir}/local-fs.target.wants/
-
-	# /data partition automount
-	install -m 0644 ${WORKDIR}/data.mount ${D}${systemd_system_unitdir}
-	ln -s /lib/systemd/system/data.mount ${D}${systemd_system_unitdir}/local-fs.target.wants/data.mount
 
 	# USB gadget service
 	install -m 0755 ${WORKDIR}/usb_gadgets.sh ${D}${sbindir}
