@@ -92,6 +92,7 @@ FBK: sync
 FBK: ucmd mkdir -p /mnt/data
 FBK: ucmd mount /dev/mmcblk2p5 /mnt/data || (mkfs.ext4 /dev/mmcblk2p5 && mount /dev/mmcblk2p5 /mnt/data)
 FBK: ucmd test -f /mnt/data/etc/wpa_supplicant/wpa_supplicant-mlan0.conf || test -f /mnt/etc/wpa_supplicant.conf && (mkdir -p /mnt/data/etc/wpa_supplicant && cp -a /mnt/etc/wpa_supplicant.conf /mnt/data/etc/wpa_supplicant/wpa_supplicant-mlan0.conf) || true
+FBK: ucmd echo "/dev/mmcblk2p5       /data          auto       defaults  0  0" >> /mnt/etc/fstab
 FBK: ucmd umount /mnt/data
 FBK: ucmd umount /mnt
 FBK: done
