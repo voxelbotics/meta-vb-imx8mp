@@ -24,6 +24,8 @@ PACKAGE_INSTALL = " \
 		e2fsprogs-mke2fs \
 		util-linux \
 		navq-files \
+		u-boot-fw-utils \
+		u-boot-default-env \
 		${ROOTFS_BOOTSTRAP_INSTALL}"
 
 export IMAGE_BASENAME = "${MLPREFIX}navq-install-initrd"
@@ -76,6 +78,7 @@ FBK: ucp imx-boot-imx8mpnavq-sd.bin-flash_evk T:/tmp/imx-boot-imx8mpnavq-sd.bin-
 FBK: ucmd dd if=/tmp/imx-boot-imx8mpnavq-sd.bin-flash_evk of=/dev/mmcblk2 bs=1k seek=32
 # clear U-Boot env
 FBK: ucmd dd if=/dev/zero of=/dev/mmcblk2 bs=1k seek=4096 count=1
+FBK: ucmd fw_setenv mmcroot "/dev/mmcblk2p3 rootwait rw"
 FBK: ucp partitions.sfdisk T:/tmp/partitions.sfdisk
 FBK: ucmd (ls /dev/mmcblk2?* | xargs umount) || true
 FBK: ucmd sfdisk /dev/mmcblk2 < /tmp/partitions.sfdisk
