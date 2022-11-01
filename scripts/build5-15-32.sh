@@ -165,6 +165,8 @@ files=(
 	imx-boot-imx8mpnavq-sd.bin-flash_evk
 	imx-image-desktop-imx8mpnavq.tar.bz2
 	imx-image-desktop-imx8mpnavq.wic.bz2
+	imx-image-desktop-ros-imx8mpnavq.wic.bz2
+	imx-image-desktop-ros-imx8mpnavq-mfgbundle.zip
 	imx-image-full-imx8mpnavq.tar.bz2
 	imx-image-full-imx8mpnavq.wic.bz2
 	uuu
