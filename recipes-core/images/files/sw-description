@@ -68,10 +68,14 @@ software =
 
 			}
 			);
-			uboot: (
+			bootenv: (
 			{
 				name = "mmcpart";
 				value = "1";
+			},
+			{
+				name = "mmcroot";
+				value = "/dev/mmcblk2p3 rootwait rw";
 			},
 			);
 		};
@@ -137,10 +141,14 @@ software =
 				sha256 = "$swupdate_get_sha256(@@SWU_ROOTFS_FILE@@)";
 			}
 			);
-			uboot: (
+			bootenv: (
 			{
 				name = "mmcpart";
 				value = "2";
+			},
+			{
+				name = "mmcroot";
+				value = "/dev/mmcblk2p4 rootwait rw";
 			},
 			);
 		};
