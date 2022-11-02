@@ -104,10 +104,10 @@ ros-humble-webots-ros2-msgs \
 ros-humble-wiimote-msgs \
 "
 
-#ros-humble-rslidar-msg
+#ros-humble-rslidar-msgs
 #ros-humble-turtlebot4-msgs
 
-ROS_GALACTIC_RMWS = " \
+ROS_HUMBLE_RMWS = " \
 ros-humble-rmw \
 ros-humble-rmw-connextdds \
 ros-humble-rmw-connextdds-common \
@@ -116,8 +116,6 @@ ros-humble-rmw-dds-common \
 ros-humble-rmw-fastrtps-cpp \
 ros-humble-rmw-fastrtps-dynamic-cpp \
 ros-humble-rmw-fastrtps-shared-cpp \
-ros-humble-rmw-gurumdds-cpp \
-ros-humble-rmw-gurumdds-shared-cpp \
 ros-humble-rmw-implementation \
 ros-humble-rmw-implementation-cmake \
 "
