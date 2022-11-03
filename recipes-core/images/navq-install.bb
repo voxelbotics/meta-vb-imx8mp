@@ -28,7 +28,7 @@ PACKAGE_INSTALL = " \
 		u-boot-default-env \
 		${ROOTFS_BOOTSTRAP_INSTALL}"
 
-export IMAGE_BASENAME = "${MLPREFIX}navq-install-initrd"
+export IMAGE_BASENAME = "${MLPREFIX}${BPN}-initrd"
 IMAGE_LINGUAS = ""
 
 IMAGE_FSTYPES = "${INITRAMFS_FSTYPES}"
@@ -68,7 +68,7 @@ FB: download -f Image
 FB: ucmd setenv fastboot_buffer \$fdt_addr
 FB: download -f imx8mp-navq.dtb
 FB: ucmd setenv fastboot_buffer \$initrd_addr
-FB: download -f navq-install-initrd.uImage
+FB: download -f ${IMAGE_BASENAME}.uImage
 FB: ucmd run mmcargs
 FB: ucmd setenv bootargs $bootargs quiet=quiet mfgboot
 FB: acmd booti \$loadaddr \$initrd_addr \$fdt_addr
