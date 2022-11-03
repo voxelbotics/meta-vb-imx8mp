@@ -127,7 +127,6 @@ sed -i 's/^DL_DIR.*$/DL_DIR\ \?=\ \"\/home\/cache\/CACHE\/5.15.32\/downloads\/\"
 echo "SSTATE_DIR = \"/home/cache/CACHE/5.15.32/sstate-cache\"" >> conf/local.conf || exit $?
 echo "IMAGE_INSTALL:append = \" navq-files \"" >> conf/local.conf || exit $?
 echo "BBMASK += \"$BBMASK\"" >> conf/local.conf || exit $?
-echo "BB_DEFAULT_UMASK = \"0002\"" >> conf/local.conf || exit $?
 sed -i -e "s/BB_DEFAULT_UMASK =/BB_DEFAULT_UMASK ?=/" ../sources/poky/meta/conf/bitbake.conf
 sed -i -e "s/PACKAGE_CLASSES = \"package_rpm\"/PACKAGE_CLASSES ?= \"package_rpm\"/" conf/local.conf
 sed -i -e "s/PACKAGE_CLASSES = \"package_deb\"/PACKAGE_CLASSES ?= \"package_deb\"/" conf/local.conf
