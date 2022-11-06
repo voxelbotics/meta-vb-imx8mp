@@ -85,10 +85,13 @@ get_yocto_info() {
 mkdir tmp
 pushd tmp
 if [ "$SETTAG" != "head" ]; then
-	git clone -b $BRANCH git@github.com:voxelbotics/u-boot-imx.git || exit $?
-	git clone -b $BRANCH git@github.com:voxelbotics/linux-imx.git || exit $?
-	for i in u-boot-imx linux-imx; do
+	for i in u-boot-imx linux-imx meta-vb-imx8mp; do
+		git clone -b $BRANCH git@github.com:voxelbotics/${i}.git || exit $?
 		pushd $i
+		if [ $i = "meta-vb-imx8mp" ]; then
+		    yocto_hash=$(get_yocto_hash)
+		    yocto_info=$(get_yocto_info)
+		fi
 		if [ -z $(git tag -l $SETTAG) ]; then
 			echo "Set tag $SETTAG to $i"
 			git tag $SETTAG || exit $?
@@ -97,28 +100,13 @@ if [ "$SETTAG" != "head" ]; then
 		popd
 	done
 fi
-popd
+popd # tmp
 
 pushd sources
-git clone -b $BRANCH git@github.com:voxelbotics/meta-vb-imx8mp.git || exit $?
+ln -s ../tmp/meta-vb-imx8mp . || exit $?
+
 git clone -b kirkstone https://github.com/sbabic/meta-swupdate.git
-pushd meta-vb-imx8mp
-yocto_hash=$(get_yocto_hash)
-yocto_info=$(get_yocto_info)
-if [ "$SETTAG" != "head" ]; then
-	if [ -z $(git tag -l $SETTAG) ]; then
-		echo "Set tag $SETTAG"
-		git tag $SETTAG || exit $?
-		git push origin $SETTAG || exit $?
-	else
-		git checkout $SETTAG
-	fi
-	echo "Building $SETTAG"
-else
-	echo "Building HEAD"
-fi
-popd
-popd
+popd # sources
 RELEASE_VER="${SETTAG}-$(date +%m%d%H%M)-${yocto_hash}"
 
 DISTRO=${DISTRO} MACHINE=imx8mpnavq EULA=yes BUILD_DIR=builddir source ./${SETUP} || exit $?
