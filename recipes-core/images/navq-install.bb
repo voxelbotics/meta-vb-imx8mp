@@ -79,6 +79,8 @@ FBK: ucmd dd if=/tmp/imx-boot-imx8mpnavq-sd.bin-flash_evk of=/dev/mmcblk2 bs=1k 
 # clear U-Boot env
 FBK: ucmd dd if=/dev/zero of=/dev/mmcblk2 bs=1k seek=4096 count=1
 FBK: ucmd fw_setenv mmcroot "/dev/mmcblk2p3 rootwait rw"
+FBK: ucmd fw_setenv mmcdev 2
+FBK: ucmd fw_setenv mmcautodetect no
 FBK: ucp partitions.sfdisk T:/tmp/partitions.sfdisk
 FBK: ucmd (ls /dev/mmcblk2?* | xargs umount) || true
 FBK: ucmd sfdisk /dev/mmcblk2 < /tmp/partitions.sfdisk
