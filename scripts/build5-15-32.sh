@@ -194,6 +194,7 @@ files=(
 	navq-install-desktop.uuu
 	navq-install.uuu
 	navq-install-initrd.uImage
+	navq-install-desktop-initrd.uImage
 	partitions.sfdisk
 )
 
