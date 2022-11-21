@@ -19,11 +19,11 @@ PACKAGE_INSTALL = " \
 		udev \
 		base-passwd \
 		systemd-initramfs \
-		imx-uuc \
 		dosfstools \
 		e2fsprogs-mke2fs \
 		util-linux \
 		navq-files \
+		usb-gadgets-uuc1 \
 		u-boot-fw-utils \
 		u-boot-default-env \
 		${ROOTFS_BOOTSTRAP_INSTALL}"

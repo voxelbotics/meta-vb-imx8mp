@@ -15,7 +15,7 @@ IMAGE_FEATURES += "			\
 
 IMAGE_INSTALL:append = "		\
     navq-files				\
-    umtp-responder			\
+    usb-gadgets-mtp1			\
     openssh				\
     opkg				\
     swupdate				\

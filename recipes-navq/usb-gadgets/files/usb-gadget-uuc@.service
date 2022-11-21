@@ -1,0 +1,10 @@
+[Unit]
+Description=USB Fastboot handler at %I
+#After=systemd-user-sessions.service plymouth-quit-wait.service getty-pre.target
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/usb-gadget-uuc.sh %I 0
+
+[Install]
+WantedBy=usb-gadget.target

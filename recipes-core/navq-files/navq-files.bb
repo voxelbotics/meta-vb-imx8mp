@@ -5,8 +5,6 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
 SRC_URI = " \
-	file://usb-gadgets.service \
-	file://usb_gadgets.sh \
 	file://wireless.network \
 	file://nxp_depmod.conf \
 	file://nxp_modules.conf \
@@ -26,11 +24,6 @@ do_install() {
 	install -d ${D}${sbindir}
 	install -d ${D}${systemd_system_unitdir}/multi-user.target.wants/
 	install -d ${D}${systemd_system_unitdir}/local-fs.target.wants/
-
-	# USB gadget service
-	install -m 0755 ${WORKDIR}/usb_gadgets.sh ${D}${sbindir}
-	install -m 0644 ${WORKDIR}/usb-gadgets.service ${D}${systemd_system_unitdir}
-	ln -s /lib/systemd/system/usb-gadgets.service ${D}${systemd_system_unitdir}/multi-user.target.wants/usb-gadgets.service
 
 	# WiFi configuration
 	install -m 0644 ${WORKDIR}/wireless.network ${D}${sysconfdir}/systemd/network

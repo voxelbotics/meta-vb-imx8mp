@@ -1,0 +1,10 @@
+[Unit]
+Description=USB Ethernet gadget %I
+After=systemd-user-sessions.service plymouth-quit-wait.service getty-pre.target
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/usb-gadget-eth.sh %I
+
+[Install]
+WantedBy=usb-gadget.target
