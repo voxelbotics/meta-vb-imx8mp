@@ -185,8 +185,6 @@ files=(
 	imx-boot-imx8mpnavq-sd.bin-flash_evk
 	imx-image-desktop-imx8mpnavq.tar.bz2
 	imx-image-desktop-imx8mpnavq.wic.bz2
-	imx-image-desktop-ros-imx8mpnavq.wic.bz2
-	imx-image-desktop-ros-imx8mpnavq-mfgbundle.zip
 	imx-image-full-imx8mpnavq.tar.bz2
 	imx-image-full-imx8mpnavq.wic.bz2
 	uuu
@@ -198,16 +196,33 @@ files=(
 	partitions.sfdisk
 )
 
+ros_files=(
+	imx-image-desktop-ros-imx8mpnavq.wic.bz2
+	imx-image-desktop-ros-imx8mpnavq-mfgbundle.zip
+)
+
 # copy artifacts
 if [ -d "$DST" ]; then
 	mkdir -p $DST/$RELEASE_VER
-	for i in ${files[*]}; do
+	for i in ${files[*]} ${ros_files[*]}; do
 		file=$BUILDDIR/tmp/deploy/images/imx8mpnavq/$i
 		if [ -f $file ]; then
 			cp $file $DST/$RELEASE_VER/
 		fi
 	done
 fi
+
+# upload a file to S3 storage
+# parameters: <source> <path>
+upload_to_s3() {
+	# option -F would follow symlinks
+	if s3cmd -F put $1 s3://${S3BUCKET}/$2; then
+		echo "Uploaded to https://${S3BUCKET}.${S3BASE}/$2/$(basename $1)"
+		s3cmd setacl --acl-public s3://${S3BUCKET}/$2/$(basename $1)
+	else
+		echo "Error uploading $(basename $1) to s3://${S3BUCKET}/$2/"
+	fi
+}
 
 #upload to S3 bucket
 if [ "x${S3}" = "xyes" ]; then
@@ -223,14 +238,16 @@ if [ "x${S3}" = "xyes" ]; then
 	else
 	    path="release"
 	fi
-	s3cmd put /tmp/${RELEASE_VER}-navqp.zip s3://${S3BUCKET}/${path}/
-	if [ $? -eq 0 ]; then
-	    echo "Uploaded to https://${S3BUCKET}.${S3BASE}/${path}/${RELEASE_VER}-navqp.zip"
-	    s3cmd setacl --acl-public s3://${S3BUCKET}/${path}/${RELEASE_VER}-navqp.zip
-	else
-	    echo "Error uploading /tmp/${RELEASE_VER}-navqp.zip to s3://${S3BUCKET}/${path}/"
-	fi
-	rm /tmp/${RELEASE_VER}-navqp.zip
+	# upload base release bundle zip
+	upload_to_s3 /tmp/${RELEASE_VER}-navqp.zip "${path}"
+	# upload SD card image for ROS2
+	ln -s $BUILDDIR/tmp/deploy/images/imx8mpnavq/imx-image-desktop-ros-imx8mpnavq.wic.bz2 /tmp/${RELEASE_VER}-ros2.wic.bz2
+	upload_to_s3 /tmp/${RELEASE_VER}-ros2.wic.bz2 "${path}"
+	# upload EMMC image bundle for ROS2
+	ln -s $BUILDDIR/tmp/deploy/images/imx8mpnavq/imx-image-desktop-ros-imx8mpnavq-mfgbundle.zip /tmp/${RELEASE_VER}-ros2-mfgbundle.zip
+	upload_to_s3 /tmp/${RELEASE_VER}-ros2-mfgbundle.zip "${path}"
+	# remove temps
+	rm /tmp/${RELEASE_VER}-navqp.zip /tmp/${RELEASE_VER}-ros2.wic.bz2 /tmp/${RELEASE_VER}-ros2-mfgbundle.zip
 fi
 
 finish=`date +%s`; echo "### Build Time = `expr \( $finish - $start \) / 60` minutes"
