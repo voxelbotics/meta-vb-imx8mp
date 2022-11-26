@@ -126,6 +126,7 @@ APTGET_EXTRA_PACKAGES += "\
 	gstreamer1.0-nice \
 	gstreamer1.0-opencv \
 	iw   \
+	${@bb.utils.contains('PACKAGE_CLASSES', 'package_rpm', 'rpm', '', d)} \
 "
 
 APTGET_EXTRA_PACKAGES_LAST += " \
