@@ -25,4 +25,5 @@ IMAGE_INSTALL:append = "		\
     u-boot-imx-env			\
     libubootenv-bin			\
     libubootenv				\
+    ${@bb.utils.contains('PACKAGE_CLASSES', 'package_rpm', 'rpm', '', d)} \
 "
