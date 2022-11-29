@@ -14,3 +14,4 @@ SRC_URI += " \
 do_configure:append () {
     ${S}/scripts/kconfig/merge_config.sh -m -O ${B} ${B}/.config $(ls ${WORKDIR}/*.cfg)
 }
+LOCALVERSION = "-head-11261511-2ac604d11b"
