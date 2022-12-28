@@ -8,7 +8,7 @@ APTGET_EXTRA_PACKAGES += " \
 		       ${@bb.utils.contains('PACKAGE_CLASSES', 'package_rpm', 'rpm', '', d)} \
 		       "
 
-IMAGE_POSTPROCESS_COMMAND:append = "do_enable_gdm_autologin;"
+ROOTFS_POSTPROCESS_COMMAND:append = "do_enable_gdm_autologin;"
 
 do_enable_gdm_autologin () {
     # Enable gdm auto-login
