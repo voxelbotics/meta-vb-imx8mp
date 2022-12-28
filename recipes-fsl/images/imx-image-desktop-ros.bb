@@ -212,6 +212,4 @@ fakeroot do_install_home_files() {
 	set +x
 }
 
-inherit navq-partitions
-
 IMAGE_INSTALL += "navq-files"
