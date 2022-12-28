@@ -23,7 +23,6 @@ do_install() {
 	install -d ${D}${systemd_system_unitdir}
 	install -d ${D}${sbindir}
 	install -d ${D}${systemd_system_unitdir}/multi-user.target.wants/
-	install -d ${D}${systemd_system_unitdir}/local-fs.target.wants/
 
 	# WiFi configuration
 	install -m 0644 ${WORKDIR}/wireless.network ${D}${sysconfdir}/systemd/network
@@ -49,5 +48,12 @@ do_install() {
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGES:prepend = "${PN}-wpa "
 
-FILES:${PN} += "/data /etc /lib /usr"
+FILES:${PN}-wpa = " \
+	/data \
+	${sysconfdir}/systemd/network \
+	${sysconfdir}/wpa_supplicant \
+	${systemd_system_unitdir} \
+"
+FILES:${PN} += "${sysconfdir} /lib /usr"

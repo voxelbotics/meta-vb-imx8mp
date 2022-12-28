@@ -15,3 +15,8 @@ do_enable_gdm_autologin () {
     sed -i "s/#  AutomaticLoginEnable = true/AutomaticLoginEnable = true/" ${IMAGE_ROOTFS}/etc/gdm3/custom.conf
     sed -i "s/#  AutomaticLogin = user1/AutomaticLogin = user/" ${IMAGE_ROOTFS}/etc/gdm3/custom.conf
 }
+
+IMAGE_INSTALL += " \
+		navq-files \
+		navq-files-wpa \
+"

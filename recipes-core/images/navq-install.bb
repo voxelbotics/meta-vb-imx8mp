@@ -23,6 +23,7 @@ PACKAGE_INSTALL = " \
 		e2fsprogs-mke2fs \
 		util-linux \
 		navq-files \
+		navq-files-wpa \
 		usb-gadgets-uuc1 \
 		u-boot-fw-utils \
 		u-boot-default-env \
