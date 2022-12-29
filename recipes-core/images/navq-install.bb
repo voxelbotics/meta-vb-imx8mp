@@ -25,6 +25,7 @@ PACKAGE_INSTALL = " \
 		navq-files \
 		navq-files-wpa \
 		usb-gadgets-uuc1 \
+		usb-gadgets-uuc2 \
 		u-boot-fw-utils \
 		u-boot-default-env \
 		${ROOTFS_BOOTSTRAP_INSTALL}"
