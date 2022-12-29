@@ -9,7 +9,7 @@ FB: download -f navq-mfgtool.dtb
 FB: ucmd setenv fastboot_buffer $initrd_addr
 FB: download -f navq-mfgtool.initrd
 FB: ucmd run mmcargs
-FB: ucmd setenv bootargs $bootargs quiet=quiet mfgboot
+FB: ucmd setenv bootargs $bootargs quiet=quiet mfgboot initcall_blacklist=tcpci_i2c_driver_init
 FB: acmd booti $loadaddr $initrd_addr $fdt_addr
 
 # create GPT partitions

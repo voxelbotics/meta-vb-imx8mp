@@ -72,7 +72,7 @@ FB: download -f imx8mp-navq.dtb
 FB: ucmd setenv fastboot_buffer \$initrd_addr
 FB: download -f ${IMAGE_BASENAME}.uImage
 FB: ucmd run mmcargs
-FB: ucmd setenv bootargs $bootargs quiet=quiet mfgboot
+FB: ucmd setenv bootargs $bootargs quiet=quiet mfgboot initcall_blacklist=tcpci_i2c_driver_init
 FB: acmd booti \$loadaddr \$initrd_addr \$fdt_addr
 
 # upload and install boot and rootfs images
