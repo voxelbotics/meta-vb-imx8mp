@@ -192,15 +192,20 @@ fakeroot do_fix_dns() {
 fakeroot do_install_home_files() {
 	set -x
 
-	echo "<CycloneDDS> \
-  	<Domain> \
-    	<General> \
-      	<NetworkInterfaceAddress>usb0,mlan0</NetworkInterfaceAddress> \
-    	</General> \
-  	</Domain> \
-	</CycloneDDS> \
-	" > ${APTGET_CHROOT_DIR}/home/user/CycloneDDSConfig.xml
-
+	cat  > ${APTGET_CHROOT_DIR}/home/user/CycloneDDSConfig.xml <<END
+<CycloneDDS xmlns="https://cdds.io/config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://cdds.io/config https://raw.githubusercontent.com/eclipse-cyclonedds/cyclonedds/master/etc/cyclonedds.xsd">
+	<Domain Id="any">
+		<General>
+			<Interfaces>
+				<NetworkInterface name="usb0" priority="default" multicast="default" />
+				<NetworkInterface name="mlan0" priority="default" multicast="default" />
+			</Interfaces>
+			<AllowMulticast>default</AllowMulticast>
+			<MaxMessageSize>65500B</MaxMessageSize>
+		</General>
+	</Domain>
+</CycloneDDS>
+END
 	echo "source /opt/ros/humble/setup.bash" >> ${APTGET_CHROOT_DIR}/home/user/.bashrc
 	echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> ${APTGET_CHROOT_DIR}/home/user/.bashrc
 	echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ${APTGET_CHROOT_DIR}/home/user/.bashrc
@@ -213,3 +218,10 @@ fakeroot do_install_home_files() {
 }
 
 IMAGE_INSTALL += "navq-files"
+
+
+fakeroot do_aptget_user_update() {
+	wget -q -P ${APTGET_CHROOT_DIR}/ https://cdn.discordapp.com/attachments/1034130487586852984/1058192298787217458/tflite_runtime-2.12.0-cp310-cp310-linux_aarch64.whl
+	chroot ${APTGET_CHROOT_DIR} /usr/bin/pip3 install tflite_runtime-2.12.0-cp310-cp310-linux_aarch64.whl
+	rm -f ${APTGET_CHROOT_DIR}/tflite_runtime-2.12.0-cp310-cp310-linux_aarch64.whl
+}
