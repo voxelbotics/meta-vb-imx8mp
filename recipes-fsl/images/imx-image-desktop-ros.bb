@@ -197,7 +197,7 @@ fakeroot do_install_home_files() {
 	echo "source /opt/ros/humble/setup.bash" >> ${APTGET_CHROOT_DIR}/home/user/.bashrc
 	echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> ${APTGET_CHROOT_DIR}/home/user/.bashrc
 	echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ${APTGET_CHROOT_DIR}/home/user/.bashrc
-	echo "export CYCLONEDDS_URI=/home/user/CycloneDDSConfig.xml" >> ${APTGET_CHROOT_DIR}/home/user/.bashrc
+	echo "export CYCLONEDDS_URI=/home/\$USER/CycloneDDSConfig.xml" >> ${APTGET_CHROOT_DIR}/home/user/.bashrc
 
 	chown user:user ${APTGET_CHROOT_DIR}/home/user/CycloneDDSConfig.xml
 	chown user:user ${APTGET_CHROOT_DIR}/home/user/.bashrc
