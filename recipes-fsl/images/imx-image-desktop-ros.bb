@@ -2,6 +2,7 @@ require recipes-fsl/images/imx-image-desktop.bb
 require imx-image.inc
 require ros2-packages.inc
 
+ROOTFS_POSTPROCESS_COMMAND:append = "do_enable_gdm_autologin;"
 IMAGE_PREPROCESS_COMMAND:remove = "do_fix_connman_conflict"
 
 IMAGE_INSTALL:append = "opencv \
@@ -212,4 +213,10 @@ fakeroot do_aptget_user_update() {
 	wget -q -P ${APTGET_CHROOT_DIR}/ https://github.com/rudislabs/NavQPlus-Resources/raw/lf-5.15.32_2.0.0/python/tflite_runtime-2.12.0-cp310-cp310-linux_aarch64.whl
 	chroot ${APTGET_CHROOT_DIR} /usr/bin/pip3 install tflite_runtime-2.12.0-cp310-cp310-linux_aarch64.whl
 	rm -f ${APTGET_CHROOT_DIR}/tflite_runtime-2.12.0-cp310-cp310-linux_aarch64.whl
+}
+
+do_enable_gdm_autologin () {
+    # Enable gdm auto-login
+    sed -i "s/#  AutomaticLoginEnable = true/AutomaticLoginEnable = true/" ${IMAGE_ROOTFS}/etc/gdm3/custom.conf
+    sed -i "s/#  AutomaticLogin = user1/AutomaticLogin = user/" ${IMAGE_ROOTFS}/etc/gdm3/custom.conf
 }
