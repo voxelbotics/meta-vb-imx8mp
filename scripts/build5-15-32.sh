@@ -238,13 +238,13 @@ if [ "x${S3}" = "xyes" ]; then
 	    path="release"
 	fi
 	# upload base release bundle zip
-	upload_to_s3 /tmp/${RELEASE_VER}-navqp.zip "${path}" ${RELEASE_VER}-navqp.zip
+#	upload_to_s3 /tmp/${RELEASE_VER}-navqp.zip "${path}" ${RELEASE_VER}-navqp.zip
 	# upload SD card image for ROS2
 	upload_to_s3 $BUILDDIR/tmp/deploy/images/imx8mpnavq/imx-image-desktop-ros-imx8mpnavq.wic.bz2 "${path}" ${RELEASE_VER}-ros2.wic.bz2
 	# upload boot loader
 	upload_to_s3 $BUILDDIR/tmp/deploy/images/imx8mpnavq/imx-boot-imx8mpnavq-sd.bin-flash_evk "${path}" ${RELEASE_VER}-imx-boot-imx8mpnavq-sd.bin-flash_evk
 	# remove temps
-	rm /tmp/${RELEASE_VER}-navqp.zip
+	rm -f /tmp/${RELEASE_VER}-navqp.zip
 fi
 
 finish=`date +%s`; echo "### Build Time = `expr \( $finish - $start \) / 60` minutes"
