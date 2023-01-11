@@ -18,7 +18,7 @@ IMAGE_INSTALL:remove = "chromium-ozone-wayland"
 
 IMAGE_INSTALL += "install-interface-config install-dns-config"
 
-ROOTFS_POSTPROCESS_COMMAND:prepend = " do_ros_repo;"
+ROOTFS_POSTPROCESS_COMMAND:prepend = " do_ros_repo; do_pmd_repo;"
 ROOTFS_POSTPROCESS_COMMAND:remove = " do_update_dns;"
 ROOTFS_POSTPROCESS_COMMAND:append = " do_disable_hibernate; do_generate_netplan; \
 					do_fix_dns; do_install_home_files;"
@@ -143,6 +143,7 @@ APTGET_EXTRA_PACKAGES_LAST += " \
 	ros-humble-image-pipeline \
 	${ROS_HUMBLE_MSGS} \
 	${ROS_HUMBLE_RMWS} \
+	ros-humble-pmd-royale-ros \
 "
 
 # Couldn't get v4l2loopback-utils because of dkms failure. Try later maybe?
@@ -169,6 +170,14 @@ fakeroot do_ros_repo() {
 
 	wget https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -O ${APTGET_CHROOT_DIR}/usr/share/keyrings/ros-archive-keyring.gpg
 	echo "deb [arch=arm64 signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu jammy main" > ${APTGET_CHROOT_DIR}/etc/apt/sources.list.d/ros2.list
+
+	set +x
+}
+
+fakeroot do_pmd_repo() {
+	set -x
+
+	echo "deb [trusted=yes] https://vb-files.fra1.digitaloceanspaces.com/debian/ jammy pmd" > ${APTGET_CHROOT_DIR}/etc/apt/sources.list.d/pmd.list
 
 	set +x
 }
