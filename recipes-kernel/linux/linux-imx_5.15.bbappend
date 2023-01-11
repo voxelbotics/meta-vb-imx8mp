@@ -9,6 +9,7 @@ SRC_URI += " \
     file://tja1xxc45.cfg \
     file://pcf2131.cfg \
     file://gasket_apex.cfg \
+    file://mrvl_bt.cfg \
 "
 
 do_configure:append () {
