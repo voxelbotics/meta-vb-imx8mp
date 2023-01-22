@@ -20,7 +20,7 @@ IMAGE_INSTALL += "install-interface-config install-dns-config"
 
 ROOTFS_POSTPROCESS_COMMAND:prepend = " do_ros_repo; do_pmd_repo;"
 ROOTFS_POSTPROCESS_COMMAND:remove = " do_update_dns;"
-ROOTFS_POSTPROCESS_COMMAND:append = " do_disable_hibernate; do_generate_netplan; \
+ROOTFS_POSTPROCESS_COMMAND:append = " do_disable_hibernate; \
 					do_fix_dns; do_install_home_files;"
 
 APTGET_EXTRA_LIBRARY_PATH="/usr/lib/jvm/java-11-openjdk-arm64/lib/jli"
@@ -185,7 +185,7 @@ fakeroot do_pmd_repo() {
 do_generate_netplan() {
 	set -x
 
-	echo "network:\n  version: 2\n  renderer: NetworkManager" > ${IMAGE_ROOTFS}/etc/netplan/01-network-manager-all.yaml
+	echo -e "network:\n  version: 2\n  renderer: NetworkManager" > ${IMAGE_ROOTFS}/etc/netplan/01-network-manager-all.yaml
 
 	set +x
 }
