@@ -19,4 +19,5 @@ do_enable_gdm_autologin () {
 IMAGE_INSTALL += " \
 		navq-files \
 		navq-files-wpa \
+		umtp-responder \
 "
