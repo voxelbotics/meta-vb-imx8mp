@@ -12,6 +12,7 @@ IMAGE_INSTALL:append = "opencv \
 			tensorflow-lite-vx-delegate \
 			packagegroup-imx-ml-desktop \
 			usb-gadgets-eth2 \
+			umtp-responder \
 			"
 
 IMAGE_INSTALL:remove = "chromium-ozone-wayland"
