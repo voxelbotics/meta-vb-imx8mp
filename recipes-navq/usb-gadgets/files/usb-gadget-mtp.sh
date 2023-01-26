@@ -60,6 +60,6 @@ ln -s functions/ffs.mtp configs/c.1
 sleep 1
 
 # enable the usb functions
-echo $USB_PORT > usb_gadget/g1/UDC
+echo $USB_PORT > UDC
 
 echo bye
