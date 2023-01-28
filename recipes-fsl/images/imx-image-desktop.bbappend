@@ -20,4 +20,5 @@ IMAGE_INSTALL += " \
 		navq-files \
 		navq-files-wpa \
 		umtp-responder \
+		usb-gadgets \
 "
