@@ -11,11 +11,15 @@ SRC_URI = " \
 	file://usb-gadget-eth.sh \
 	file://usb-gadget-mtp.sh \
 	file://usb-gadget-uuc.sh \
+	file://usb-gadget-stop.sh \
 "
 
 # NAVQ+ USB ports
 USB_PORT1 ?= "38100000.usb"
 USB_PORT2 ?= "38200000.usb"
+
+# USB gadget links directory
+GADGET_LINKS_DIR = "${sysconfdir}/systemd/system/usb-gadget.target.wants"
 
 do_install() {
 	install -d ${D}
@@ -25,6 +29,7 @@ do_install() {
 	install -m 0755 ${WORKDIR}/usb-gadget-eth.sh ${D}${sbindir}
 	install -m 0755 ${WORKDIR}/usb-gadget-mtp.sh ${D}${sbindir}
 	install -m 0755 ${WORKDIR}/usb-gadget-uuc.sh ${D}${sbindir}
+	install -m 0755 ${WORKDIR}/usb-gadget-stop.sh ${D}${sbindir}
 
 	# USB gadget services
 	install -d ${D}${systemd_system_unitdir}
@@ -33,13 +38,13 @@ do_install() {
 	install -m 0644 ${WORKDIR}/usb-gadget-uuc@.service ${D}${systemd_system_unitdir}
 
 	# install port-specific links
-	install -d ${D}${systemd_system_unitdir}/usb-gadget.target.wants/
-	ln -sf ../usb-gadget-eth@.service ${D}${systemd_system_unitdir}/usb-gadget.target.wants/usb-gadget-eth@${USB_PORT1}.service
-	ln -sf ../usb-gadget-mtp@.service ${D}${systemd_system_unitdir}/usb-gadget.target.wants/usb-gadget-mtp@${USB_PORT1}.service
-	ln -sf ../usb-gadget-uuc@.service ${D}${systemd_system_unitdir}/usb-gadget.target.wants/usb-gadget-uuc@${USB_PORT1}.service
-	ln -sf ../usb-gadget-eth@.service ${D}${systemd_system_unitdir}/usb-gadget.target.wants/usb-gadget-eth@${USB_PORT2}.service
-	ln -sf ../usb-gadget-mtp@.service ${D}${systemd_system_unitdir}/usb-gadget.target.wants/usb-gadget-mtp@${USB_PORT2}.service
-	ln -sf ../usb-gadget-uuc@.service ${D}${systemd_system_unitdir}/usb-gadget.target.wants/usb-gadget-uuc@${USB_PORT2}.service
+	install -d ${D}${GADGET_LINKS_DIR}
+	ln -sf ${systemd_system_unitdir}/usb-gadget-eth@.service ${D}${GADGET_LINKS_DIR}/usb-gadget-eth@${USB_PORT1}.service
+	ln -sf ${systemd_system_unitdir}/usb-gadget-mtp@.service ${D}${GADGET_LINKS_DIR}/usb-gadget-mtp@${USB_PORT1}.service
+	ln -sf ${systemd_system_unitdir}/usb-gadget-uuc@.service ${D}${GADGET_LINKS_DIR}/usb-gadget-uuc@${USB_PORT1}.service
+	ln -sf ${systemd_system_unitdir}/usb-gadget-eth@.service ${D}${GADGET_LINKS_DIR}/usb-gadget-eth@${USB_PORT2}.service
+	ln -sf ${systemd_system_unitdir}/usb-gadget-mtp@.service ${D}${GADGET_LINKS_DIR}/usb-gadget-mtp@${USB_PORT2}.service
+	ln -sf ${systemd_system_unitdir}/usb-gadget-uuc@.service ${D}${GADGET_LINKS_DIR}/usb-gadget-uuc@${USB_PORT2}.service
 }
 
 PACKAGES += " \
@@ -60,11 +65,11 @@ RDEPENDS:${PN}-mtp2 = "${PN} umtp-responder"
 RDEPENDS:${PN}-uuc1 = "${PN} imx-uuc"
 RDEPENDS:${PN}-uuc2 = "${PN} imx-uuc"
 
-FILES:${PN} += "${sbindir} ${systemd_system_unitdir}/*.service"
-FILES:${PN}-eth1 = "${systemd_system_unitdir}/usb-gadget.target.wants/usb-gadget-eth@${USB_PORT1}.service"
-FILES:${PN}-eth2 = "${systemd_system_unitdir}/usb-gadget.target.wants/usb-gadget-eth@${USB_PORT2}.service"
-FILES:${PN}-mtp1 = "${systemd_system_unitdir}/usb-gadget.target.wants/usb-gadget-mtp@${USB_PORT1}.service"
-FILES:${PN}-mtp2 = "${systemd_system_unitdir}/usb-gadget.target.wants/usb-gadget-mtp@${USB_PORT2}.service"
-FILES:${PN}-uuc1 = "${systemd_system_unitdir}/usb-gadget.target.wants/usb-gadget-uuc@${USB_PORT1}.service"
-FILES:${PN}-uuc2 = "${systemd_system_unitdir}/usb-gadget.target.wants/usb-gadget-uuc@${USB_PORT2}.service"
+FILES:${PN} = "${sbindir} ${systemd_system_unitdir}/*.service"
+FILES:${PN}-eth1 = "${GADGET_LINKS_DIR}/usb-gadget-eth@${USB_PORT1}.service"
+FILES:${PN}-eth2 = "${GADGET_LINKS_DIR}/usb-gadget-eth@${USB_PORT2}.service"
+FILES:${PN}-mtp1 = "${GADGET_LINKS_DIR}/usb-gadget-mtp@${USB_PORT1}.service"
+FILES:${PN}-mtp2 = "${GADGET_LINKS_DIR}/usb-gadget-mtp@${USB_PORT2}.service"
+FILES:${PN}-uuc1 = "${GADGET_LINKS_DIR}/usb-gadget-uuc@${USB_PORT1}.service"
+FILES:${PN}-uuc2 = "${GADGET_LINKS_DIR}/usb-gadget-uuc@${USB_PORT2}.service"
 
