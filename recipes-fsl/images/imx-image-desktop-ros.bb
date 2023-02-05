@@ -15,8 +15,6 @@ IMAGE_INSTALL:append = "opencv \
 			umtp-responder \
 			"
 
-IMAGE_INSTALL:remove = "chromium-ozone-wayland"
-
 IMAGE_INSTALL += "install-interface-config install-dns-config"
 
 ROOTFS_POSTPROCESS_COMMAND:prepend = " do_ros_repo; do_pmd_repo;"
