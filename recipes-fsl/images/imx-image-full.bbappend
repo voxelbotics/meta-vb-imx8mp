@@ -11,8 +11,7 @@ IMAGE_INSTALL:append += " \
                          tensorflow-lite-vx-delegate \
                          packagegroup-imx-ml-desktop \
                          umtp-responder \
-                         navq-files \
-                         navq-files-wpa \
+                         navq-wpa-supplicant \
                         "
 
 APTGET_EXTRA_PACKAGES += " \

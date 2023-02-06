@@ -14,8 +14,7 @@ IMAGE_FEATURES += "			\
 "
 
 IMAGE_INSTALL:append = "		\
-    navq-files				\
-    navq-files-wpa			\
+    navq-swu-scripts			\
     usb-gadgets-mtp1			\
     openssh				\
     opkg				\

@@ -13,6 +13,7 @@ IMAGE_INSTALL:append = "opencv \
 			packagegroup-imx-ml-desktop \
 			usb-gadgets-eth2 \
 			umtp-responder \
+			navq-kmod-mlan \
 			"
 
 IMAGE_INSTALL += "install-interface-config install-dns-config"
@@ -214,9 +215,6 @@ fakeroot do_install_home_files() {
 
 	set +x
 }
-
-IMAGE_INSTALL += "navq-files"
-
 
 fakeroot do_aptget_user_update() {
 	wget -q -P ${APTGET_CHROOT_DIR}/ https://github.com/rudislabs/NavQPlus-Resources/raw/lf-5.15.32_2.0.0/python/tflite_runtime-2.12.0-cp310-cp310-linux_aarch64.whl

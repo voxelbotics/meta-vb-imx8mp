@@ -1,0 +1,10 @@
+[Match]
+Name=mlan0
+
+[Network]
+DHCP=yes
+
+[DHCP]
+ClientIdentifier=mac
+SendHostname=True
+Hostname=Navq+
