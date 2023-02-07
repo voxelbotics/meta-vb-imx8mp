@@ -22,8 +22,6 @@ PACKAGE_INSTALL = " \
 		dosfstools \
 		e2fsprogs-mke2fs \
 		util-linux \
-		navq-files \
-		navq-files-wpa \
 		usb-gadgets-uuc1 \
 		usb-gadgets-uuc2 \
 		u-boot-fw-utils \
