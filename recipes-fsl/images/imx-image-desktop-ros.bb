@@ -220,6 +220,8 @@ fakeroot do_aptget_user_update() {
 	wget -q -P ${APTGET_CHROOT_DIR}/ https://github.com/rudislabs/NavQPlus-Resources/raw/lf-5.15.32_2.0.0/python/tflite_runtime-2.12.0-cp310-cp310-linux_aarch64.whl
 	chroot ${APTGET_CHROOT_DIR} /usr/bin/pip3 install tflite_runtime-2.12.0-cp310-cp310-linux_aarch64.whl
 	rm -f ${APTGET_CHROOT_DIR}/tflite_runtime-2.12.0-cp310-cp310-linux_aarch64.whl
+	chroot ${APTGET_CHROOT_DIR} /usr/sbin/adduser user plugdev
+	chroot ${APTGET_CHROOT_DIR} /usr/sbin/adduser user input
 }
 
 do_enable_gdm_autologin () {
