@@ -9,9 +9,9 @@ SRC_URI += " \
     file://tja1xxc45.cfg \
     file://pcf2131.cfg \
     file://gasket_apex.cfg \
+    file://mrvl_bt.cfg \
 "
 
 do_configure:append () {
     ${S}/scripts/kconfig/merge_config.sh -m -O ${B} ${B}/.config $(ls ${WORKDIR}/*.cfg)
 }
-LOCALVERSION = "-head-02202051-1887cb66d8"
