@@ -10,6 +10,7 @@ SRC_URI += " \
     file://pcf2131.cfg \
     file://gasket_apex.cfg \
     file://mrvl_bt.cfg \
+    file://RISCV-31-increase-hci-timeout.patch \
 "
 
 do_configure:append () {
