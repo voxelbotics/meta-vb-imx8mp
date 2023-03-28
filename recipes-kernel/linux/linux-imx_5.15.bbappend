@@ -11,6 +11,7 @@ SRC_URI += " \
     file://gasket_apex.cfg \
     file://mrvl_bt.cfg \
     file://RISCV-31-increase-hci-timeout.patch \
+    file://joystick.cfg \
 "
 
 do_configure:append () {
