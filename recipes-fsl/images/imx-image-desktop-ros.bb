@@ -41,6 +41,7 @@ APTGET_EXTRA_PACKAGES += "\
 	cmake \
 	git \
 	ccache \
+	can-utils \
 	pkg-config \
 	python3-colcon-common-extensions \
 	python3-flake8 \
@@ -79,6 +80,7 @@ APTGET_EXTRA_PACKAGES += "\
 	python3-pytest-repeat \
 	python3-pytest-rerunfailures \
 	python3-pytest \
+	python3-can \
 	g++ \
 	gcc \
 	gdb \
