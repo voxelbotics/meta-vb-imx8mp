@@ -218,6 +218,21 @@ fakeroot do_install_home_files() {
 	set +x
 }
 
+IMAGE_INSTALL += "navq-files"
+
+FEATURE_PACKAGES_navq-swupdate = "	\
+    navq-files-wpa			\
+    usb-gadgets-mtp1			\
+    swupdate				\
+    e2fsprogs				\
+    libgcc				\
+    u-boot-imx-env			\
+    libubootenv-bin			\
+    libubootenv				\
+"
+
+WKS_FILE := " ${@bb.utils.contains('EXTRA_IMAGE_FEATURES', 'navq-swupdate', 'imx8mpnavq-sdcard-swupdate.wks.in', '${WKS_FILE}', d)}"
+
 fakeroot do_aptget_user_update() {
 	wget -q -P ${APTGET_CHROOT_DIR}/ https://github.com/rudislabs/NavQPlus-Resources/raw/lf-5.15.32_2.0.0/python/tflite_runtime-2.12.0-cp310-cp310-linux_aarch64.whl
 	chroot ${APTGET_CHROOT_DIR} /usr/bin/pip3 install tflite_runtime-2.12.0-cp310-cp310-linux_aarch64.whl
