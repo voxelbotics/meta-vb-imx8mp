@@ -13,7 +13,7 @@ IMAGE_INSTALL:append = "opencv \
 			packagegroup-imx-ml-desktop \
 			usb-gadgets-eth2 \
 			umtp-responder \
-			navq-kmod-mlan \
+			navqplus-kmod-mlan \
 			"
 
 IMAGE_INSTALL += "install-interface-config install-dns-config"

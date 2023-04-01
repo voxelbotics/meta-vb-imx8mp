@@ -31,14 +31,14 @@ if [ x"$BUILD_DESKTOP" = "xyes" ]; then
     DISTRO="imx-desktop-xwayland"
     SETUP="imx-setup-desktop.sh"
     IMGNAME="imx-image-desktop"
-    BUILDRECIPES="imx-image-desktop navq-install-desktop imx-image-desktop-ros"
+    BUILDRECIPES="imx-image-desktop navqplus-install-desktop imx-image-desktop-ros"
     BUILDDIR="build-desktop"
     BBMASK=""
 else
     MANIFEST="imx-5.15.32-1.0.0.xml"
     DISTRO="fsl-imx-xwayland"
     IMGNAME="imx-image-full"
-    BUILDRECIPES="imx-image-full navq-install"
+    BUILDRECIPES="imx-image-full navqplus-install"
     SETUP="imx-setup-release.sh"
     BUILDDIR="build-image"
     BBMASK=" imx-image-desktop "
@@ -124,7 +124,7 @@ git clone -b kirkstone https://github.com/sbabic/meta-swupdate.git
 popd # sources
 RELEASE_VER="${SETTAG}-$(date +%m%d%H%M)-${yocto_hash}"
 
-DISTRO=${DISTRO} MACHINE=imx8mpnavq EULA=yes BUILD_DIR=builddir source ./${SETUP} || exit $?
+DISTRO=${DISTRO} MACHINE=navqplus EULA=yes BUILD_DIR=builddir source ./${SETUP} || exit $?
 
 sed -i 's/^DL_DIR.*$/DL_DIR\ \?=\ \"\/home\/cache\/CACHE\/5.15.32\/downloads\/\"/' conf/local.conf || exit $?
 echo "SSTATE_DIR = \"/home/cache/CACHE/5.15.32/sstate-cache\"" >> conf/local.conf || exit $?
@@ -174,36 +174,36 @@ export BB_ENV_PASSTHROUGH_ADDITIONS="PACKAGE_CLASSES"
 bitbake uuu-native -c cleansstate
 bitbake ${BUILDRECIPES} uuu-native || exit $?
 # Only builds with package_ipk
-PACKAGE_CLASSES="package_ipk" bitbake navq-swu || exit $?
+PACKAGE_CLASSES="package_ipk" bitbake navqplus-swu || exit $?
 
-echo "$yocto_info" >> $BUILDDIR/tmp/deploy/images/imx8mpnavq/$IMGNAME-imx8mpnavq.manifest || exit $?
+echo "$yocto_info" >> $BUILDDIR/tmp/deploy/images/navqplus/$IMGNAME-navqplus.manifest || exit $?
 
 files=(
 	Image
-	imx8mp-navq.dtb
-	imx-boot-imx8mpnavq-sd.bin-flash_evk
-	imx-image-desktop-imx8mpnavq.tar.bz2
-	imx-image-desktop-imx8mpnavq.wic.bz2
-	imx-image-full-imx8mpnavq.tar.bz2
-	imx-image-full-imx8mpnavq.wic.bz2
+	navqplus.dtb
+	imx-boot-navqplus-sd.bin-flash_evk
+	imx-image-desktop-navqplus.tar.bz2
+	imx-image-desktop-navqplus.wic.bz2
+	imx-image-full-navqplus.tar.bz2
+	imx-image-full-navqplus.wic.bz2
 	uuu
-	navq-dbg.uuu
-	navq-install-desktop.uuu
-	navq-install.uuu
-	navq-install-initrd.uImage
-	navq-install-desktop-initrd.uImage
+	navqplus-dbg.uuu
+	navqplus-install-desktop.uuu
+	navqplus-install.uuu
+	navqplus-install-initrd.uImage
+	navqplus-install-desktop-initrd.uImage
 	partitions.sfdisk
 )
 
 ros_files=(
-	imx-image-desktop-ros-imx8mpnavq.wic.bz2
+	imx-image-desktop-ros-navqplus.wic.bz2
 )
 
 # copy artifacts
 if [ -d "$DST" ]; then
 	mkdir -p $DST/$RELEASE_VER
 	for i in ${files[*]} ${ros_files[*]}; do
-		file=$BUILDDIR/tmp/deploy/images/imx8mpnavq/$i
+		file=$BUILDDIR/tmp/deploy/images/navqplus/$i
 		if [ -f $file ]; then
 			cp $file $DST/$RELEASE_VER/
 		fi
@@ -225,8 +225,8 @@ upload_to_s3() {
 #upload to S3 bucket
 if [ "x${S3}" = "xyes" ]; then
 	# upload to S3 bucket
-	cd $BUILDDIR/tmp/deploy/images/imx8mpnavq/
-	zip -1 -n bz2 /tmp/${RELEASE_VER}-navqp.zip ${files[*]}
+	cd $BUILDDIR/tmp/deploy/images/navqplus/
+	zip -1 -n bz2 /tmp/${RELEASE_VER}-navqpplus.zip ${files[*]}
 	cd -
 	# if version starts with 0. or HEAD, use the "nightly/" folder on S3,
 	# otherwise, use "release/"
@@ -237,13 +237,13 @@ if [ "x${S3}" = "xyes" ]; then
 	    path="release"
 	fi
 	# upload base release bundle zip
-#	upload_to_s3 /tmp/${RELEASE_VER}-navqp.zip "${path}" ${RELEASE_VER}-navqp.zip
+#	upload_to_s3 /tmp/${RELEASE_VER}-navqplus.zip "${path}" ${RELEASE_VER}-navqplus.zip
 	# upload SD card image for ROS2
-	upload_to_s3 $BUILDDIR/tmp/deploy/images/imx8mpnavq/imx-image-desktop-ros-imx8mpnavq.wic.bz2 "${path}" ${RELEASE_VER}-ros2.wic.bz2
+	upload_to_s3 $BUILDDIR/tmp/deploy/images/navqplus/imx-image-desktop-ros-navqplus.wic.bz2 "${path}" ${RELEASE_VER}-ros2.wic.bz2
 	# upload boot loader
-	upload_to_s3 $BUILDDIR/tmp/deploy/images/imx8mpnavq/imx-boot-imx8mpnavq-sd.bin-flash_evk "${path}" ${RELEASE_VER}-imx-boot-imx8mpnavq-sd.bin-flash_evk
+	upload_to_s3 $BUILDDIR/tmp/deploy/images/navqplus/imx-boot-navqplus-sd.bin-flash_evk "${path}" ${RELEASE_VER}-imx-boot-navqplus-sd.bin-flash_evk
 	# remove temps
-	rm -f /tmp/${RELEASE_VER}-navqp.zip
+	rm -f /tmp/${RELEASE_VER}-navqplus.zip
 fi
 
 finish=`date +%s`; echo "### Build Time = `expr \( $finish - $start \) / 60` minutes"

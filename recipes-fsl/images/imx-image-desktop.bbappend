@@ -17,7 +17,7 @@ do_enable_gdm_autologin () {
 }
 
 IMAGE_INSTALL += " \
-		navq-wpa-supplicant \
+		navqplus-wpa-supplicant \
 		umtp-responder \
 		usb-gadgets \
 "

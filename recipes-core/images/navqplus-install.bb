@@ -4,7 +4,7 @@ DESCRIPTION = "Small initramfs for manufacturing of secure-boot enabled i.MX 8M 
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
-NAVQ_ROOTFS_ARCHIVE ??= "navq-rootfs-imx8mpnavq.tar.bz2"
+NAVQPLUS_ROOTFS_ARCHIVE ??= "navqplus-rootfs.tar.bz2"
 BOOT_PARTION_SIZE ??= "128M"
 ROOTFS_PARTION_SIZE ??= "5G"
 
@@ -38,7 +38,7 @@ IMAGE_ROOTFS_SIZE = "16384"
 IMAGE_ROOTFS_EXTRA_SPACE = "0"
 
 COMPATIBLE_HOST ?= "aarch64-.*-linux"
-SCRIPT_NAME ?= "navq-install"
+SCRIPT_NAME ?= "navqplus-install"
 
 #ROOTFS_POSTPROCESS_COMMAND += " custom_files; "
 IMAGE_POSTPROCESS_COMMAND += " build_uimage; "
@@ -62,11 +62,11 @@ EOF
 uuu_version 1.0.1
 
 # boot installation initrd image
-SDPS: boot -f imx-boot-imx8mpnavq-sd.bin-flash_evk
+SDPS: boot -f imx-boot-navqplus-sd.bin-flash_evk
 FB: ucmd setenv fastboot_buffer \$loadaddr
 FB: download -f Image
 FB: ucmd setenv fastboot_buffer \$fdt_addr
-FB: download -f imx8mp-navq.dtb
+FB: download -f navqplus.dtb
 FB: ucmd setenv fastboot_buffer \$initrd_addr
 FB: download -f ${IMAGE_BASENAME}.uImage
 FB: ucmd run mmcargs
@@ -74,8 +74,8 @@ FB: ucmd setenv bootargs $bootargs quiet=quiet mfgboot initcall_blacklist=tcpci_
 FB: acmd booti \$loadaddr \$initrd_addr \$fdt_addr
 
 # upload and install boot and rootfs images
-FBK: ucp imx-boot-imx8mpnavq-sd.bin-flash_evk T:/tmp/imx-boot-imx8mpnavq-sd.bin-flash_evk
-FBK: ucmd dd if=/tmp/imx-boot-imx8mpnavq-sd.bin-flash_evk of=/dev/mmcblk2 bs=1k seek=32
+FBK: ucp imx-boot-navqplus-sd.bin-flash_evk T:/tmp/imx-boot-navqplus-sd.bin-flash_evk
+FBK: ucmd dd if=/tmp/imx-boot-navqplus-sd.bin-flash_evk of=/dev/mmcblk2 bs=1k seek=32
 # clear U-Boot env
 FBK: ucmd dd if=/dev/zero of=/dev/mmcblk2 bs=1k seek=4096 count=1
 FBK: ucmd fw_setenv mmcroot "/dev/mmcblk2p3 rootwait rw"
@@ -87,12 +87,12 @@ FBK: ucmd sfdisk /dev/mmcblk2 < /tmp/partitions.sfdisk
 FBK: ucmd mkfs.vfat /dev/mmcblk2p1
 FBK: ucmd mount /dev/mmcblk2p1 /mnt
 FBK: ucp Image T:/mnt/Image
-FBK: ucp imx8mp-navq.dtb T:/mnt/imx8mp-navq.dtb
+FBK: ucp navqplus.dtb T:/mnt/navqplus.dtb
 FBK: ucmd umount /mnt
 FBK: ucmd mkfs.ext4 -F /dev/mmcblk2p3
 FBK: ucmd mount /dev/mmcblk2p3 /mnt
 FBK: acmd tar jx -C /mnt
-FBK: ucp ${NAVQ_ROOTFS_ARCHIVE} T:-
+FBK: ucp ${NAVQPLUS_ROOTFS_ARCHIVE} T:-
 FBK: sync
 FBK: ucmd mkdir -p /mnt/data
 FBK: ucmd mount /dev/mmcblk2p5 /mnt/data || (mkfs.ext4 /dev/mmcblk2p5 && mount /dev/mmcblk2p5 /mnt/data)

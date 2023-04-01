@@ -24,14 +24,14 @@ if [ x"$BUILD_DESKTOP" = "xyes" ]; then
     DISTRO="imx-desktop-xwayland"
     SETUP="imx-setup-desktop.sh"
     IMGNAME="imx-image-desktop"
-    BUILDRECIPES="imx-image-desktop navq-install-desktop"
+    BUILDRECIPES="imx-image-desktop navqplus-install-desktop"
     BUILDDIR="build-desktop"
     BBMASK=""
 else
     MANIFEST="imx-5.15.5-1.0.0.xml"
     DISTRO="fsl-imx-xwayland"
     IMGNAME="imx-image-full"
-    BUILDRECIPES="imx-image-full navq-install"
+    BUILDRECIPES="imx-image-full navqplus-install"
     SETUP="imx-setup-release.sh"
     BUILDDIR="build-image"
     BBMASK=" imx-image-desktop "
@@ -118,11 +118,11 @@ popd
 RELEASE_VER="${SETTAG}_$(date +%m%d%H%M)-${yocto_hash}"
 
 
-DISTRO=${DISTRO} MACHINE=imx8mpnavq EULA=yes BUILD_DIR=builddir source ./${SETUP} || exit $?
+DISTRO=${DISTRO} MACHINE=navqplus EULA=yes BUILD_DIR=builddir source ./${SETUP} || exit $?
 
 sed -i 's/^DL_DIR.*$/DL_DIR\ \?=\ \"\/home\/cache\/CACHE\/5.15.5\/downloads\/\"/' conf/local.conf || exit $?
 echo "SSTATE_DIR = \"/home/cache/CACHE/5.15.5/sstate-cache\"" >> conf/local.conf || exit $?
-echo "IMAGE_INSTALL:append = \" navq-files \"" >> conf/local.conf || exit $?
+echo "IMAGE_INSTALL:append = \" navqplus-files \"" >> conf/local.conf || exit $?
 echo "BBMASK += \"$BBMASK\"" >> conf/local.conf || exit $?
 echo "BB_DEFAULT_UMASK = \"0002\"" >> conf/local.conf || exit $?
 sed -i -e "s/BB_DEFAULT_UMASK =/BB_DEFAULT_UMASK ?=/" ../sources/poky/meta/conf/bitbake.conf
@@ -143,20 +143,20 @@ fi
 
 bitbake ${BUILDRECIPES} uuu-native || exit $?
 
-echo "$yocto_info" >> $BUILDDIR/tmp/deploy/images/imx8mpnavq/$IMGNAME-imx8mpnavq.manifest || exit $?
+echo "$yocto_info" >> $BUILDDIR/tmp/deploy/images/navqplus/$IMGNAME-navqplus.manifest || exit $?
 
 files=(
 	Image
-	imx8mp-navq.dtb
-	imx-boot-imx8mpnavq-sd.bin-flash_evk
-	imx-image-desktop-imx8mpnavq.tar.bz2
-	imx-image-desktop-imx8mpnavq.wic.bz2
-	imx-image-full-imx8mpnavq.tar.bz2
-	imx-image-full-imx8mpnavq.wic.bz2
-	navq-dbg.uuu
-	navq-install-desktop.uuu
-	navq-install.uuu
-	navq-install-initrd.uImage
+	navqplus.dtb
+	imx-boot-navqplus-sd.bin-flash_evk
+	imx-image-desktop-navqplus.tar.bz2
+	imx-image-desktop-navqplus.wic.bz2
+	imx-image-full-navqplus.tar.bz2
+	imx-image-full-navqplus.wic.bz2
+	navqplus-dbg.uuu
+	navqplus-install-desktop.uuu
+	navqplus-install.uuu
+	navqplus-install-initrd.uImage
 	partitions.sfdisk
 )
 
@@ -164,7 +164,7 @@ files=(
 if [ -d "$DST" ]; then
 	mkdir -p $DST/$RELEASE_VER
 	for i in ${files[*]}; do
-		file=$BUILDDIR/tmp/deploy/images/imx8mpnavq/$i
+		file=$BUILDDIR/tmp/deploy/images/navqplus/$i
 		if [ -f $file ]; then
 			cp $file $DST/$RELEASE_VER/
 		fi

@@ -30,7 +30,7 @@ do_install() {
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-RDEPENDS:${PN} = "navq-kmod-mlan wpa-supplicant"
+RDEPENDS:${PN} = "navqplus-kmod-mlan wpa-supplicant"
 
 FILES:${PN} = " \
 	/data \

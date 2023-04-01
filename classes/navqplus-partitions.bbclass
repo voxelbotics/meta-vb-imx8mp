@@ -14,25 +14,25 @@
 # 5. data fixed size partition
 
 # The supported partitioning schema names:
-# - "navq-fixed"
-# - "navq-fixed-multiboot"
+# - "navqplus-fixed"
+# - "navqplus-fixed-multiboot"
 
-NAVQ_PARTITION_SCHEMA ?= "navq-fixed"
+NAVQPLUS_PARTITION_SCHEMA ?= "navqplus-fixed"
 
 # Allow overriding default WKS file for NAVQ+
-NAVQ_DEFAULT_WKS ?= "${NAVQ_PARTITION_SCHEMA}.wks.in"
+NAVQPLUS_DEFAULT_WKS ?= "${NAVQPLUS_PARTITION_SCHEMA}.wks.in"
 
 # WKS file to create SD image
-WKS_FILE = "${NAVQ_DEFAULT_WKS}"
+WKS_FILE = "${NAVQPLUS_DEFAULT_WKS}"
 
 # UUU script to programm EMMC
-NAVQ_MFGTOOL_SCRIPT ?= "wic/${NAVQ_PARTITION_SCHEMA}.uuu.in"
-NAVQ_MFGTOOL_KERNEL ?= "${KERNEL_IMAGETYPE}"
-NAVQ_MFGTOOL_DEVICETREE ?= "${KERNEL_DEVICETREE_BASENAME}.dtb"
-NAVQ_MFGTOOL_INITRD ?= "navq-install-initrd.uImage"
+NAVQPLUS_MFGTOOL_SCRIPT ?= "wic/${NAVQPLUS_PARTITION_SCHEMA}.uuu.in"
+NAVQPLUS_MFGTOOL_KERNEL ?= "${KERNEL_IMAGETYPE}"
+NAVQPLUS_MFGTOOL_DEVICETREE ?= "${KERNEL_DEVICETREE_BASENAME}.dtb"
+NAVQPLUS_MFGTOOL_INITRD ?= "navqplus-install-initrd.uImage"
 
 # sfdisk parititons used by the UUU script
-NAVQ_SFDISK_PARTS ?= "wic/${NAVQ_PARTITION_SCHEMA}.sfdisk.in"
+NAVQPLUS_SFDISK_PARTS ?= "wic/${NAVQPLUS_PARTITION_SCHEMA}.sfdisk.in"
 
 # Default parition sizes
 BOOT_PARTITION_SIZE ?= "128M"
@@ -46,19 +46,19 @@ WIC_CREATE_EXTRA_ARGS = ""
 
 # specify bundle expected by the mfgtool script
 MFGBUNDLE_MAP ?= " \
-        ${NAVQ_MFGTOOL_SCRIPT}:uuu.auto \
+        ${NAVQPLUS_MFGTOOL_SCRIPT}:uuu.auto \
         imx-boot:flash.bin \
-        ${NAVQ_MFGTOOL_KERNEL}:navq-mfgtool.kernel \
-        ${NAVQ_MFGTOOL_DEVICETREE}:navq-mfgtool.dtb \
-        ${NAVQ_MFGTOOL_INITRD}:navq-mfgtool.initrd \
-        ${NAVQ_SFDISK_PARTS}:partitions.sfdisk \
+        ${NAVQPLUS_MFGTOOL_KERNEL}:navqplus-mfgtool.kernel \
+        ${NAVQPLUS_MFGTOOL_DEVICETREE}:navqplus-mfgtool.dtb \
+        ${NAVQPLUS_MFGTOOL_INITRD}:navqplus-mfgtool.initrd \
+        ${NAVQPLUS_SFDISK_PARTS}:partitions.sfdisk \
         ${WORKDIR}/build-wic/fstab:fstab \
         ${IMAGE_LINK_NAME}.tar.bz2:rootfs.tar.bz2 \
 "
 
 # specify mfgtool kernel and initrd recipes
 MFGBUNDLE_KERNEL ?= "virtual/kernel"
-MFGBUNDLE_INITRD ?= "navq-install"
+MFGBUNDLE_INITRD ?= "navqplus-install"
 
 # generate mfgtool bundle
-inherit navq-mfgbundle
+inherit navqplus-mfgbundle

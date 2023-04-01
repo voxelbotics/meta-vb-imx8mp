@@ -3,11 +3,11 @@ uuu_version 1.0.1
 # boot installation initrd image
 SDPS: boot -f flash.bin
 FB: ucmd setenv fastboot_buffer $loadaddr
-FB: download -f navq-mfgtool.kernel
+FB: download -f navqplus-mfgtool.kernel
 FB: ucmd setenv fastboot_buffer $fdt_addr
-FB: download -f navq-mfgtool.dtb
+FB: download -f navqplus-mfgtool.dtb
 FB: ucmd setenv fastboot_buffer $initrd_addr
-FB: download -f navq-mfgtool.initrd
+FB: download -f navqplus-mfgtool.initrd
 FB: ucmd run mmcargs
 FB: ucmd setenv bootargs $bootargs quiet=quiet mfgboot initcall_blacklist=tcpci_i2c_driver_init
 FB: acmd booti $loadaddr $initrd_addr $fdt_addr

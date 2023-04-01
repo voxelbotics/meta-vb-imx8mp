@@ -1,1 +1,1 @@
-COMPATIBLE_MACHINE = "(imx8mpevk|imx8mpnavq)"
+COMPATIBLE_MACHINE = "(imx8mpevk|navqplus)"
