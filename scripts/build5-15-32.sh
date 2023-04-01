@@ -68,7 +68,7 @@ BUILD=`date +%Y%m%d.%H%M`; start=`date +%s`
 mkdir -p $BUILDDIR
 cd $BUILDDIR
 
-repo init -u https://source.codeaurora.org/external/imx/imx-manifest -b imx-linux-kirkstone -m ${MANIFEST} || exit $?
+repo init -u https://github.com/nxp-imx/imx-manifest.git -b imx-linux-kirkstone -m ${MANIFEST} || exit $?
 repo sync || exit $?
 
 # allow build to not prompt for input
