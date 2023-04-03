@@ -2,7 +2,9 @@
 Name=can*
 
 [CAN]
-BitRate=500000
+BitRate=1000000
 DataBitRate=4000000
 FDMode=yes
-
+FDNonISO=no
+RestartSec="0.1s"
+Loopback=no
