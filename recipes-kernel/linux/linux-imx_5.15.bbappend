@@ -1,6 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-SRC_URI = "git://github.com/voxelbotics/linux-imx.git;protocol=https;branch=imx-5.15.32-vb"
+SRC_URI = "git://github.com/voxelbotics/linux-imx.git;protocol=https;branch=imx-5.15.32-vb;nobranch=1"
 SRCREV = "${AUTOREV}"
 
 SRC_URI += " \
