@@ -102,6 +102,7 @@ ros-humble-vision-msgs \
 ros-humble-visualization-msgs \
 ros-humble-webots-ros2-msgs \
 ros-humble-wiimote-msgs \
+ros-humble-create3-slam-launch \
 "
 
 #ros-humble-rslidar-msgs
