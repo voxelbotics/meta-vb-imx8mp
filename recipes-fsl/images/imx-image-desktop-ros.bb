@@ -26,6 +26,7 @@ ROOTFS_POSTPROCESS_COMMAND:append = " do_disable_hibernate; \
 APTGET_EXTRA_LIBRARY_PATH="/usr/lib/jvm/java-11-openjdk-arm64/lib/jli"
 
 APTGET_EXTRA_PACKAGES += "\
+	chrony \
 	netplan.io \
 	curl \
 	gnupg \
@@ -224,6 +225,19 @@ fakeroot do_aptget_user_update() {
 	rm -f ${APTGET_CHROOT_DIR}/tflite_runtime-2.12.0-cp310-cp310-linux_aarch64.whl
 	chroot ${APTGET_CHROOT_DIR} /usr/sbin/adduser user plugdev
 	chroot ${APTGET_CHROOT_DIR} /usr/sbin/adduser user input
+
+	# configure synchronization with Create3
+	cat > ${APTGET_CHROOT_DIR}/etc/chrony/conf.d/create3.conf <<-EOF
+		# Make it slightly to the past so host/rviz wouldn't complain
+		pool ntp.ubuntu.com        iburst maxsources 4 offset -0.3
+		pool 0.ubuntu.pool.ntp.org iburst maxsources 1 offset -0.3
+		pool 1.ubuntu.pool.ntp.org iburst maxsources 1 offset -0.3
+		pool 2.ubuntu.pool.ntp.org iburst maxsources 2 offset -0.3
+		# Enable serving time to ntp clients on 192.168.186.0 subnet.
+		allow 192.168.186.0/24
+		# Serve time even if not synchronized to a time source
+		local stratum 10
+		EOF
 }
 
 do_enable_gdm_autologin () {
