@@ -83,7 +83,7 @@ function launch_mtp() {
     cat /sys/devices/soc0/serial_number > strings/0x409/serialnumber
 
     echo "VoxelBotics" > strings/0x409/manufacturer
-    echo "Navq+" > strings/0x409/product
+    echo "NavqPlus" > strings/0x409/product
 
     echo "Conf 1" > configs/c.1/strings/0x409/configuration
     echo 120 > configs/c.1/MaxPower
