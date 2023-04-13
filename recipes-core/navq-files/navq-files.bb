@@ -45,11 +45,6 @@ do_install() {
 
 	install -m 0755 ${WORKDIR}/install_update.sh ${D}${sbindir}
 	install -m 0755 ${WORKDIR}/rollback_update.sh ${D}${sbindir}
-	install -m 0755 ${WORKDIR}/btinit.sh ${D}/usr/bin
-
-	sed -i 's/bluetoothd/bluetoothd -C -E\nExecStartPre=\/usr\/bin\/btinit.sh/' /lib/systemd/system/bluetooth.service
-	sed -i 's/CAP_NET_BIND_SERVICE/CAP_NET_BIND_SERVICE CAP_NET_RAW/' /lib/systemd/system/bluetooth.service
-
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
