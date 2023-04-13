@@ -147,7 +147,7 @@ APTGET_EXTRA_PACKAGES_LAST += " \
 	ros-humble-image-pipeline \
 	${ROS_HUMBLE_MSGS} \
 	${ROS_HUMBLE_RMWS} \
-	ros-humble-pmd-royale-ros \
+	ros-humble-pmd-camera-ros \
 "
 
 # Couldn't get v4l2loopback-utils because of dkms failure. Try later maybe?
