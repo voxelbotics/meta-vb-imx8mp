@@ -1,4 +1,3 @@
-# vim: set sw=4 ts=8:
 #!/bin/bash
 set -x
 
