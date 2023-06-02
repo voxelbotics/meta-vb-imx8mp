@@ -18,7 +18,7 @@ IMAGE_INSTALL:append = "opencv \
 
 IMAGE_INSTALL += "install-interface-config install-dns-config"
 
-ROOTFS_POSTPROCESS_COMMAND:prepend = " do_ros_repo; do_pmd_repo;"
+ROOTFS_POSTPROCESS_COMMAND:prepend = " do_ros_repo; do_vb_repo;"
 ROOTFS_POSTPROCESS_COMMAND:remove = " do_update_dns;"
 ROOTFS_POSTPROCESS_COMMAND:append = " do_disable_hibernate; \
 					do_fix_dns; do_install_home_files;"
@@ -131,6 +131,7 @@ APTGET_EXTRA_PACKAGES += "\
 	gstreamer1.0-opencv \
 	iw   \
 	usbutils \
+	qtwayland5 \
 	${@bb.utils.contains('PACKAGE_CLASSES', 'package_rpm', 'rpm', '', d)} \
 "
 
@@ -178,15 +179,15 @@ fakeroot do_ros_repo() {
 	set +x
 }
 
-fakeroot do_pmd_repo() {
+fakeroot do_vb_repo() {
 	set -x
 
-	echo "deb [trusted=yes] https://vb-files.fra1.digitaloceanspaces.com/debian/ jammy pmd" > ${APTGET_CHROOT_DIR}/etc/apt/sources.list.d/pmd.list
+	echo "deb [trusted=yes] https://vb-files.fra1.digitaloceanspaces.com/debian/ jammy voxelbotics" > ${APTGET_CHROOT_DIR}/etc/apt/sources.list.d/voxelbotics.list
 
 	set +x
 }
 
-do_generate_netplan() {
+fakeroot do_generate_netplan() {
 	set -x
 
 	echo -e "network:\n  version: 2\n  renderer: NetworkManager" > ${IMAGE_ROOTFS}/etc/netplan/01-network-manager-all.yaml
