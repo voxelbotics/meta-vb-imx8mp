@@ -149,6 +149,7 @@ APTGET_EXTRA_PACKAGES_LAST += " \
 	${ROS_HUMBLE_MSGS} \
 	${ROS_HUMBLE_RMWS} \
 	ros-humble-pmd-camera-ros \
+	libroyale-royaleviewer \
 "
 
 # Couldn't get v4l2loopback-utils because of dkms failure. Try later maybe?
