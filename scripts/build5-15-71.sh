@@ -141,7 +141,7 @@ echo $RELEASE_VER > ${BUILDDIR}/../sources/meta-vb-imx8mp/recipes-fsl/images/fil
 for i in ${BUILDDIR}/../sources/meta-vb-imx8mp/recipes-bsp/u-boot/u-boot-imx_2022.04.bbappend \
 	 ${BUILDDIR}/../sources/meta-vb-imx8mp/recipes-kernel/linux/linux-imx_5.15.bbappend;
 do
-    sed -i "s/LOCALVERSION.*/LOCALVERSION = \"-${RELEASE_VER}\"/" ${i}
+    sed -i "s/^LOCALVERSION\s*=.*/LOCALVERSION = \"-${RELEASE_VER}\"/" ${i}
     if [ "x$(grep LOCALVERSION ${i})" = "x" ]; then
 	echo "LOCALVERSION = \"-$RELEASE_VER\"" >> ${i} || exit $?
     fi
