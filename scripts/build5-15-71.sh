@@ -142,7 +142,7 @@ for i in ${BUILDDIR}/../sources/meta-vb-imx8mp/recipes-bsp/u-boot/u-boot-imx_202
 	 ${BUILDDIR}/../sources/meta-vb-imx8mp/recipes-kernel/linux/linux-imx_5.15.bbappend;
 do
     sed -i "s/^LOCALVERSION\s*=.*/LOCALVERSION = \"-${RELEASE_VER}\"/" ${i}
-    if [ "x$(grep LOCALVERSION ${i})" = "x" ]; then
+    if [ "x$(grep '^LOCALVERSION\s*=' ${i})" = "x" ]; then
 	echo "LOCALVERSION = \"-$RELEASE_VER\"" >> ${i} || exit $?
     fi
 done
