@@ -20,4 +20,5 @@ IMAGE_INSTALL += " \
 		navq-wpa-supplicant \
 		umtp-responder \
 		usb-gadgets \
+		gnome-shell-extension-no-overview \
 "
