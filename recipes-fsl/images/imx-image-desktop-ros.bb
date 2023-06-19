@@ -14,6 +14,7 @@ IMAGE_INSTALL:append = "opencv \
 			usb-gadgets-eth2 \
 			umtp-responder \
 			navq-kmod-mlan \
+			gnome-shell-extension-no-overview \
 			"
 
 IMAGE_INSTALL += "install-interface-config install-dns-config"
