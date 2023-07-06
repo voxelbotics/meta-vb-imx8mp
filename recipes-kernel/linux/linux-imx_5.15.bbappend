@@ -12,6 +12,7 @@ SRC_URI += " \
     file://mrvl_bt.cfg \
     file://RISCV-31-increase-hci-timeout.patch \
     file://joystick.cfg \
+    file://containers.cfg \
 "
 
 do_configure:append () {
