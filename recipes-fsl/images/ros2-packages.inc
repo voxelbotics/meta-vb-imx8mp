@@ -76,7 +76,6 @@ ros-humble-rqt-msg \
 ros-humble-sensor-msgs \
 ros-humble-sensor-msgs-py \
 ros-humble-shape-msgs \
-ros-humble-smacc2-msgs \
 ros-humble-soccer-object-msgs \
 ros-humble-statistics-msgs \
 ros-humble-std-msgs \
