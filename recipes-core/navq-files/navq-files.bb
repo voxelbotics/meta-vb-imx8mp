@@ -10,6 +10,7 @@ SRC_URI = " \
 	file://nxp_modules.conf \
 	file://install_update.sh \
 	file://rollback_update.sh \
+	file://btinit.sh \
 "
 
 do_install() {
