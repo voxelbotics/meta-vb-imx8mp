@@ -22,7 +22,8 @@ IMAGE_INSTALL += "install-interface-config install-dns-config"
 ROOTFS_POSTPROCESS_COMMAND:prepend = " do_ros_repo; do_vb_repo;"
 ROOTFS_POSTPROCESS_COMMAND:remove = " do_update_dns;"
 ROOTFS_POSTPROCESS_COMMAND:append = " do_disable_hibernate; \
-					do_fix_dns; do_install_home_files;"
+					do_fix_dns; do_install_home_files; \
+					do_prepare_docker; "
 
 APTGET_EXTRA_LIBRARY_PATH="/usr/lib/jvm/java-11-openjdk-arm64/lib/jli"
 
@@ -133,6 +134,7 @@ APTGET_EXTRA_PACKAGES += "\
 	iw   \
 	usbutils \
 	qtwayland5 \
+	docker.io \
 	${@bb.utils.contains('PACKAGE_CLASSES', 'package_rpm', 'rpm', '', d)} \
 "
 
@@ -271,4 +273,10 @@ fakeroot do_config_gnome () {
     dconf update ${IMAGE_ROOTFS}${sysconfdir}/dconf/db
 
     set +x
+}
+
+fakeroot do_prepare_docker () {
+    ln -sf /usr/sbin/iptables-legacy ${IMAGE_ROOTFS}/etc/alternatives/iptables
+    ln -sf /usr/sbin/iptables-legacy-save ${IMAGE_ROOTFS}/etc/alternatives/iptables-save
+    ln -sf /usr/sbin/iptables-legacy-restore ${IMAGE_ROOTFS}/etc/alternatives/iptables-restore
 }
