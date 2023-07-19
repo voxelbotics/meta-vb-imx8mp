@@ -135,6 +135,7 @@ APTGET_EXTRA_PACKAGES += "\
 	usbutils \
 	qtwayland5 \
 	docker.io \
+	docker-compose \
 	${@bb.utils.contains('PACKAGE_CLASSES', 'package_rpm', 'rpm', '', d)} \
 "
 
