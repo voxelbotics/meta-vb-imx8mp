@@ -2,6 +2,11 @@ require recipes-fsl/images/imx-image-desktop.bb
 require imx-image.inc
 require ros2-packages.inc
 
+CUSTOM_FILES_PATH := "${THISDIR}/files"
+SRC_URI = " \
+	file://btinit.sh \
+"
+
 ROOTFS_POSTPROCESS_COMMAND:append = "do_enable_gdm_autologin; do_config_gnome;"
 IMAGE_PREPROCESS_COMMAND:remove = "do_fix_connman_conflict"
 
@@ -22,7 +27,9 @@ IMAGE_INSTALL += "install-interface-config install-dns-config"
 ROOTFS_POSTPROCESS_COMMAND:prepend = " do_ros_repo; do_vb_repo;"
 ROOTFS_POSTPROCESS_COMMAND:remove = " do_update_dns;"
 ROOTFS_POSTPROCESS_COMMAND:append = " do_disable_hibernate; \
-					do_fix_dns; do_install_home_files; \
+					do_fix_dns; \
+					do_install_home_files; \
+					do_fix_bt; \
 					do_prepare_docker; "
 
 APTGET_EXTRA_LIBRARY_PATH="/usr/lib/jvm/java-11-openjdk-arm64/lib/jli"
@@ -135,6 +142,7 @@ APTGET_EXTRA_PACKAGES += "\
 	usbutils \
 	qtwayland5 \
 	docker.io \
+	docker-compose \
 	${@bb.utils.contains('PACKAGE_CLASSES', 'package_rpm', 'rpm', '', d)} \
 "
 
@@ -279,4 +287,11 @@ fakeroot do_prepare_docker () {
     ln -sf /usr/sbin/iptables-legacy ${IMAGE_ROOTFS}/etc/alternatives/iptables
     ln -sf /usr/sbin/iptables-legacy-save ${IMAGE_ROOTFS}/etc/alternatives/iptables-save
     ln -sf /usr/sbin/iptables-legacy-restore ${IMAGE_ROOTFS}/etc/alternatives/iptables-restore
+}
+
+do_fix_bt () {
+	install -m 0755 ${CUSTOM_FILES_PATH}/btinit.sh ${IMAGE_ROOTFS}/usr/bin/
+
+	sed -i 's/bluetoothd/bluetoothd -C -E\nExecStartPre=\/usr\/bin\/btinit.sh/' ${IMAGE_ROOTFS}/lib/systemd/system/bluetooth.service
+	sed -i 's/CAP_NET_BIND_SERVICE/CAP_NET_BIND_SERVICE CAP_NET_RAW/' ${IMAGE_ROOTFS}/lib/systemd/system/bluetooth.service
 }
