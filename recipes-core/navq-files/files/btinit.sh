@@ -14,7 +14,7 @@ function increase_port_speed
 }
 
 /usr/bin/hciattach /dev/ttymxc0 any -s 115200 115200 flow
-/usr/bin/hciconfig hci0 up
+/usr/bin/hciconfig hci0 up || exit 0
 
 # Increase the BT baud rate
 increase_port_speed 3000000
