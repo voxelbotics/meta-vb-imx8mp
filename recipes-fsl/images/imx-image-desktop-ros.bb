@@ -20,6 +20,7 @@ IMAGE_INSTALL:append = "opencv \
 			umtp-responder \
 			navq-kmod-mlan \
 			gnome-shell-extension-no-overview \
+			matter \
 			"
 
 IMAGE_INSTALL += "install-interface-config install-dns-config"
