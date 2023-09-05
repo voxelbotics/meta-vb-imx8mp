@@ -14,3 +14,6 @@ S = "${WORKDIR}/stringcase-1.2.0"
 RDEPENDS_${PN} = ""
 
 inherit python_setuptools_build_meta
+
+BBCLASSEXTEND = "native nativesdk"
+
