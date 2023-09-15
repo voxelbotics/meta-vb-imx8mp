@@ -3,7 +3,7 @@ SUMMARY = "uMTP-Responder is a lightweight USB Media Transfer Protocol (MTP) res
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = " file://LICENSE;md5=d32239bcb673463ab874e80d47fae504 "
 
-SRC_URI = "git://github.com/viveris/uMTP-Responder.git;protocol=https \
+SRC_URI = "git://github.com/viveris/uMTP-Responder.git;protocol=https;branch=master \
            file://umtprd.conf \
            "
 SRCREV = "umtprd-1.3.6"
