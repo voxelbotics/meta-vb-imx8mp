@@ -7,16 +7,19 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7ca
 SRCBRANCH = "v1.1-branch-nxp_imx_2023_q2"
 IMX_MATTER_SRC ?= "gitsm://github.com/NXP/matter.git;protocol=https"
 SRC_URI = "${IMX_MATTER_SRC};branch=${SRCBRANCH}"
-MATTER_PY_PATH ?= "python3"
+MATTER_PY_PATH ?= "nativepython3"
 
 PATCHTOOL = "git"
 
 SRCREV = "3d49f03b180ce617bb8050c1d8384ab714a21b53"
 
 TARGET_CC_ARCH += "${LDFLAGS}"
-DEPENDS += " gn-native ninja-native avahi dbus-glib-native pkgconfig-native zap-native boost python3-stringcase-native"
+DEPENDS += " gn-native ninja-native avahi dbus-glib-native pkgconfig-native zap-native boost python3-stringcase-native \
+             python3-click-native python3-lark-native python3-jinja2-native"
 RDEPENDS_${PN} += " libavahi-client "
 FILES:${PN} += "usr/share"
+
+inherit python3targetconfig
 
 INSANE_SKIP:${PN} += "dev-so debug-deps strip"
 
