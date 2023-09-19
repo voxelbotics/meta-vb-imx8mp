@@ -34,6 +34,7 @@ if [ x"$BUILD_DESKTOP" = "xyes" ]; then
     BUILDRECIPES="imx-image-desktop navq-install-desktop imx-image-desktop-ros"
     BUILDDIR="build-desktop"
     BBMASK=""
+    PACKAGING="rpm"
 else
     MANIFEST="imx-6.1.22-2.0.0.xml"
     DISTRO="fsl-imx-xwayland"
@@ -42,6 +43,7 @@ else
     SETUP="imx-setup-release.sh"
     BUILDDIR="build-image"
     BBMASK=" imx-image-desktop "
+    PACKAGING="deb"
 fi
 
 function cleanup() {
@@ -130,8 +132,7 @@ sed -i 's/^DL_DIR.*$/DL_DIR\ \?=\ \"\/home\/cache\/CACHE\/6.1.22\/downloads\/\"/
 echo "SSTATE_DIR = \"/home/cache/CACHE/6.1.22/sstate-cache\"" >> conf/local.conf || exit $?
 echo "BBMASK += \"$BBMASK\"" >> conf/local.conf || exit $?
 sed -i -e "s/BB_DEFAULT_UMASK =/BB_DEFAULT_UMASK ?=/" ../sources/poky/meta/conf/bitbake.conf
-sed -i -e "s/PACKAGE_CLASSES = \"package_rpm\"/PACKAGE_CLASSES ?= \"package_rpm\"/" conf/local.conf
-sed -i -e "s/PACKAGE_CLASSES = \"package_deb\"/PACKAGE_CLASSES ?= \"package_deb\"/" conf/local.conf
+sed -i -e "s/PACKAGE_CLASSES ?\?=.*$/PACKAGE_CLASSES ?= \"package_$PACKAGING\"/" conf/local.conf
 
 echo BBLAYERS += \"\${BSPDIR}/sources/meta-vb-imx8mp\" >> conf/bblayers.conf || exit $?
 echo BBLAYERS += \"\${BSPDIR}/sources/meta-swupdate\" >> conf/bblayers.conf || exit $?
