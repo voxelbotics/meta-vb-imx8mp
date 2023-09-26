@@ -22,6 +22,8 @@ IMAGE_INSTALL:append = "opencv \
 			gnome-shell-extension-no-overview \
 			matter \
 			mdns \
+			openthread \
+			otbr \
 			"
 
 IMAGE_INSTALL += "install-interface-config install-dns-config"
@@ -145,9 +147,6 @@ APTGET_EXTRA_PACKAGES += "\
 	qtwayland5 \
 	docker.io \
 	docker-compose \
-	mdns \
-	openthread \
-	otbr \
 	${@bb.utils.contains('PACKAGE_CLASSES', 'package_rpm', 'rpm', '', d)} \
 	picocom	\
 "
