@@ -145,6 +145,9 @@ APTGET_EXTRA_PACKAGES += "\
 	qtwayland5 \
 	docker.io \
 	docker-compose \
+	mdns \
+	openthread \
+	otbr \
 	${@bb.utils.contains('PACKAGE_CLASSES', 'package_rpm', 'rpm', '', d)} \
 	picocom	\
 "
