@@ -12,7 +12,7 @@ FILES:${PN} += "usr/share"
 FILES:${PN} += "usr/lib"
 
 DEPENDS += " jsoncpp avahi boost pkgconfig-native mdns libnetfilter-queue ipset libnftnl nftables "
-RDEPENDS:${PN} += " jsoncpp mdns radvd libnetfilter-queue ipset libnftnl nftables bash "
+RDEPENDS:${PN} += " jsoncpp libnetfilter-queue ipset libnftnl nftables bash "
 
 inherit cmake
 

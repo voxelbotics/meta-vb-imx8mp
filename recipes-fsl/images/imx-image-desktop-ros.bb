@@ -21,7 +21,6 @@ IMAGE_INSTALL:append = "opencv \
 			navq-kmod-mlan \
 			gnome-shell-extension-no-overview \
 			matter \
-			mdns \
 			openthread \
 			otbr \
 			"
@@ -147,6 +146,8 @@ APTGET_EXTRA_PACKAGES += "\
 	qtwayland5 \
 	docker.io \
 	docker-compose \
+	mdnsd \
+	radvd \
 	${@bb.utils.contains('PACKAGE_CLASSES', 'package_rpm', 'rpm', '', d)} \
 	picocom	\
 "
@@ -289,11 +290,15 @@ fakeroot do_config_gnome () {
 }
 
 fakeroot do_prepare_docker () {
-    sed -i 's/systemd-networkd-wait-online/systemd-networkd-wait-online --any/' ${IMAGE_ROOTFS}/lib/systemd/system/systemd-networkd-wait-online.service
+    sed -i 's/\=systemd-networkd-wait-online/\=systemd-networkd-wait-online --any/' ${IMAGE_ROOTFS}/lib/systemd/system/systemd-networkd-wait-online.service
 
     ln -sf /usr/sbin/iptables-legacy ${IMAGE_ROOTFS}/etc/alternatives/iptables
     ln -sf /usr/sbin/iptables-legacy-save ${IMAGE_ROOTFS}/etc/alternatives/iptables-save
     ln -sf /usr/sbin/iptables-legacy-restore ${IMAGE_ROOTFS}/etc/alternatives/iptables-restore
+
+    ln -sf /usr/sbin/ip6tables-legacy ${IMAGE_ROOTFS}/etc/alternatives/ip6tables
+    ln -sf /usr/sbin/ip6tables-legacy-save ${IMAGE_ROOTFS}/etc/alternatives/ip6tables-save
+    ln -sf /usr/sbin/ip6tables-legacy-restore ${IMAGE_ROOTFS}/etc/alternatives/ip6tables-restore
 }
 
 do_fix_bt () {
