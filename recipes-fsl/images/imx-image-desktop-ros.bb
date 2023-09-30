@@ -290,7 +290,7 @@ fakeroot do_config_gnome () {
 }
 
 fakeroot do_prepare_docker () {
-    sed -i 's/\=systemd-networkd-wait-online/\=systemd-networkd-wait-online --any/' ${IMAGE_ROOTFS}/lib/systemd/system/systemd-networkd-wait-online.service
+    sed -i 's/\/systemd-networkd-wait-online/\/systemd-networkd-wait-online --any/' ${IMAGE_ROOTFS}/lib/systemd/system/systemd-networkd-wait-online.service
 
     ln -sf /usr/sbin/iptables-legacy ${IMAGE_ROOTFS}/etc/alternatives/iptables
     ln -sf /usr/sbin/iptables-legacy-save ${IMAGE_ROOTFS}/etc/alternatives/iptables-save
