@@ -21,6 +21,7 @@ IMAGE_INSTALL:append = "opencv \
 			navq-kmod-mlan \
 			gnome-shell-extension-no-overview \
 			matter \
+			mdns \
 			"
 
 IMAGE_INSTALL += "install-interface-config install-dns-config"
