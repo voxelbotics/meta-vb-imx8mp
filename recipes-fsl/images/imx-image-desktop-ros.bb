@@ -146,6 +146,7 @@ APTGET_EXTRA_PACKAGES += "\
 	docker.io \
 	docker-compose \
 	${@bb.utils.contains('PACKAGE_CLASSES', 'package_rpm', 'rpm', '', d)} \
+	picocom	\
 "
 
 APTGET_EXTRA_PACKAGES_LAST += " \
