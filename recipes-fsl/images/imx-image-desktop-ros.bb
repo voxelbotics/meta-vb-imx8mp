@@ -21,6 +21,7 @@ IMAGE_INSTALL:append = "opencv \
 			navq-kmod-mlan \
 			gnome-shell-extension-no-overview \
 			matter \
+			mdns \
 			openthread \
 			otbr \
 			"
@@ -146,7 +147,6 @@ APTGET_EXTRA_PACKAGES += "\
 	qtwayland5 \
 	docker.io \
 	docker-compose \
-	mdnsd \
 	radvd \
 	${@bb.utils.contains('PACKAGE_CLASSES', 'package_rpm', 'rpm', '', d)} \
 	picocom	\
