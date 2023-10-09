@@ -24,6 +24,7 @@ IMAGE_INSTALL:append = "opencv \
 			mdns \
 			openthread \
 			otbr \
+			navq-persistent-storage \
 			"
 
 IMAGE_INSTALL += "install-interface-config install-dns-config"

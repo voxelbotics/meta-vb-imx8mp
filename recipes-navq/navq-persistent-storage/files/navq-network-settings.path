@@ -1,0 +1,8 @@
+[Unit]
+Description=Network Manager connection monitoring
+
+[Path]
+PathChanged=/etc/NetworkManager/system-connections
+
+[Install]
+WantedBy=multi-user.target

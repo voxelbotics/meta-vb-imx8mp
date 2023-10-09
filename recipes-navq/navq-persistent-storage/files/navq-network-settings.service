@@ -1,0 +1,8 @@
+[Unit]
+Description=Save network settings
+
+[Service]
+Type=oneshot
+ExecStart=/usr/share/navq-persistent-storage/storage-scripts.d/network-settings backup
+
+[Install]
