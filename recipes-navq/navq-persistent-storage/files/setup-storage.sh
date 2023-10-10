@@ -31,7 +31,7 @@ die() {
 # check if the data partition is present
 if [ ! -b "$DATADEV" ]; then
 	# add data partition
-	if ! echo $SFDISK_INPUT | /usr/sbin/sfdisk -b -O $SFDISK_BACKUP -a /dev/$PKNAME; then
+	if ! echo $SFDISK_INPUT | /usr/sbin/sfdisk -f -b -O $SFDISK_BACKUP -a /dev/$PKNAME; then
 		backups=$(ls $SFDISK_BACKUP-$PKNAME*)
 		# restore raw data
 		for f in $backups; do
