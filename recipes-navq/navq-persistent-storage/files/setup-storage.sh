@@ -14,9 +14,6 @@ SFDISK_BACKUP=/tmp/sfdisk
 # acquire partition and block device for the root mount point
 eval $(/usr/bin/lsblk -PoPKNAME,MOUNTPOINT | /usr/bin/grep 'MOUNTPOINT="/"')
 
-# FIXME: remove when debugging is done
-PKNAME=mmcblk1
-
 DATADEV=/dev/${PKNAME}p${DATAPART}
 
 note() {
