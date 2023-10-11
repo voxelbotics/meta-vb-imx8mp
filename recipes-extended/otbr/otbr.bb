@@ -6,6 +6,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=87109e44b2fda96a8991f27684a7349c"
 
 PATCHTOOL = "git"
 
+SYSTEMD_AUTO_ENABLE = "disable"
+
 S = "${WORKDIR}/git"
 FILES:${PN} += "lib/systemd"
 FILES:${PN} += "usr/share"
