@@ -5,6 +5,7 @@ SRC_URI += "file://0002-copy-prebuilt-frontend-files-instead-of-build.patch"
 SRC_URI += "file://0003-Install-pskc-for-otbr-agent-credentials-generation.patch"
 SRC_URI += "file://0004-Add-service-otbr_fwcfg-to-config-the-firewall-policy.patch"
 SRC_URI += "file://0005-web-bump-to-latest-Simple-Web-Server-version-1667.patch"
+SRC_URI += "file://0006-Do-not-start-otbr-agent-if-there-s-no-dongle.patch"
 
 SRCREV = "1813352247aa60fb8993773918f1e5b4af6f3b79"
 
