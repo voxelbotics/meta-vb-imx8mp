@@ -139,10 +139,3 @@ do_install:append() {
     chmod +x ${D}${sysconfdir}/init.d/otbr-firewall
     cp ${S}/script/README_firewall.txt ${D}${sysconfdir}/init.d
 }
-
-SRC_URI = "gitsm://github.com/openthread/ot-br-posix.git;branch=main \
-           file://otbrpatches-039-98e644d/otbr-0001-update-paths-UART-SPI.patch \
-           file://otbrpatches-039-98e644d/otbr-0003-update-otbr-agent-opts-UART.patch \
-           file://otbrpatches-039-98e644d/otbr-0004-firewall-UART-SPI.patch \
-           file://0001-Do-not-start-otbr-agent-if-there-s-no-dongle.-Limit-.patch \
-           "
