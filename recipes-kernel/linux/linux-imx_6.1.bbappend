@@ -14,6 +14,7 @@ SRC_URI += " \
     file://joystick.cfg \
     file://containers.cfg \
     file://fw.cfg \
+    file://ipv6.cfg \
 "
 
 do_configure:append () {
