@@ -4,18 +4,18 @@ DESCRIPTION = "This layer loads the main Matter applications"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-SRCBRANCH = "v1.1-branch-nxp_imx_2023_q2"
+SRCBRANCH = "v1.1-branch-nxp_imx_2023_q3"
 IMX_MATTER_SRC ?= "gitsm://github.com/NXP/matter.git;protocol=https"
 SRC_URI = "${IMX_MATTER_SRC};branch=${SRCBRANCH}"
 MATTER_PY_PATH ?= "nativepython3"
 
 PATCHTOOL = "git"
 
-SRCREV = "3d49f03b180ce617bb8050c1d8384ab714a21b53"
+SRCREV = "b82a8cf5291164d6d1aaaabe5af8f1e6c7e1b369"
 
 TARGET_CC_ARCH += "${LDFLAGS}"
 DEPENDS += " gn-native ninja-native avahi dbus-glib-native pkgconfig-native zap-native boost python3-stringcase-native \
-             python3-click-native python3-lark-native python3-jinja2-native"
+             python3-click-native python3-lark-native python3-jinja2-native python3-requests-native python3-click-option-group-native "
 RDEPENDS_${PN} += " libavahi-client "
 FILES:${PN} += "usr/share"
 
@@ -182,8 +182,10 @@ do_compile() {
         cd ${S}/examples/chip-tool
         ninja -C out/aarch64-trusty
     fi
+
 }
 
+do_install[network] = "1"
 do_install() {
     install -d -m 755 ${D}${bindir}
     install ${S}/examples/lighting-app/linux/out/aarch64/chip-lighting-app ${D}${bindir}
@@ -206,6 +208,12 @@ do_install() {
         install ${S}/examples/nxp-thermostat/linux/out/aarch64-trusty/nxp-thermostat-app ${D}${bindir}/nxp-thermostat-app-trusty
         install ${S}/examples/chip-tool/out/aarch64-trusty/chip-tool ${D}${bindir}/chip-tool-trusty
     fi
+
+    cd ${S}/credentials
+    python3 fetch-paa-certs-from-dcl.py --use-main-net-http 
+
+    install -d -m 755 ${D}/usr/share/matter
+    cp -r ${S}/credentials ${D}/usr/share/matter
 }
 
 do_install_zap() {

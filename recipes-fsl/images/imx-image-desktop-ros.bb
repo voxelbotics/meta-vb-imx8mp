@@ -22,8 +22,7 @@ IMAGE_INSTALL:append = "opencv \
 			gnome-shell-extension-no-overview \
 			matter \
 			mdns \
-			openthread \
-			otbr \
+			ot-br-posix \
 			navq-persistent-storage \
 			"
 
@@ -35,8 +34,7 @@ ROOTFS_POSTPROCESS_COMMAND:append = " do_disable_hibernate; \
 					do_fix_dns; \
 					do_install_home_files; \
 					do_fix_bt; \
-					do_prepare_docker; \
-					do_fix_otbr; "
+					do_prepare_docker; "
 
 APTGET_EXTRA_LIBRARY_PATH="/usr/lib/jvm/java-11-openjdk-arm64/lib/jli"
 
@@ -308,8 +306,4 @@ do_fix_bt () {
 
 	sed -i 's/bluetoothd/bluetoothd -C -E\nExecStartPre=\/usr\/bin\/btinit.sh/' ${IMAGE_ROOTFS}/lib/systemd/system/bluetooth.service
 	sed -i 's/CAP_NET_BIND_SERVICE/CAP_NET_BIND_SERVICE CAP_NET_RAW/' ${IMAGE_ROOTFS}/lib/systemd/system/bluetooth.service
-}
-
-do_fix_otbr () {
-	sed -i 's/ConditionPathExists=\/usr\/sbin\/otbr-agent/ConditionPathExists=\/usr\/sbin\/otbr-agent\nConditionPathExists=\/dev\/ttyACM0/' ${IMAGE_ROOTFS}/lib/systemd/system/otbr-agent.service 
 }
