@@ -24,6 +24,7 @@ IMAGE_INSTALL:append = "opencv \
 			mdns \
 			ot-br-posix \
 			navq-persistent-storage \
+			hdmi-detect \
 			"
 
 IMAGE_INSTALL += "install-interface-config install-dns-config"

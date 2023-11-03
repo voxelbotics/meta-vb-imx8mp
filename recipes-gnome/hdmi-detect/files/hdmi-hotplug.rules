@@ -1,0 +1,1 @@
+ACTION=="change", SUBSYSTEM=="drm", RUN+="/usr/share/hdmi-detect/hdmi-hotplug.sh"
