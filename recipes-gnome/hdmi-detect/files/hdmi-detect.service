@@ -1,0 +1,8 @@
+[Unit]
+Description=Check if HDMI display is connected
+
+[Service]
+Type=oneshot
+ExecStart=/usr/share/hdmi-detect/hdmi-detect.sh
+
+[Install]
