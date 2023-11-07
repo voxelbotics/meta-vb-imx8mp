@@ -6,7 +6,9 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7ca
 
 SRCBRANCH = "v1.1-branch-nxp_imx_2023_q3"
 IMX_MATTER_SRC ?= "gitsm://github.com/NXP/matter.git;protocol=https"
-SRC_URI = "${IMX_MATTER_SRC};branch=${SRCBRANCH}"
+SRC_URI = "${IMX_MATTER_SRC};branch=${SRCBRANCH} \
+    file://pigweed_environment.gni"
+
 MATTER_PY_PATH ?= "nativepython3"
 
 PATCHTOOL = "git"
@@ -18,6 +20,7 @@ DEPENDS += " gn-native ninja-native avahi dbus-glib-native pkgconfig-native zap-
              python3-click-native python3-lark-native python3-jinja2-native python3-requests-native python3-click-option-group-native "
 RDEPENDS_${PN} += " libavahi-client "
 FILES:${PN} += "usr/share"
+FILES:${PN} += "usr/lib"
 
 inherit python3targetconfig
 
@@ -85,6 +88,7 @@ trusty_configure() {
         target_ar="${AR}"'
 }
 
+do_configure[network] = "1"
 do_configure() {
     cd ${S}/
     if ${DEPLOY_TRUSTY}; then
@@ -140,6 +144,7 @@ do_configure() {
         cd ${S}/examples/nxp-thermostat/linux
         trusty_configure
     fi
+    cp ${WORKDIR}/pigweed_environment.gni ${S}/build_overrides/
 }
 
 do_compile() {
@@ -214,12 +219,48 @@ do_install() {
 
     install -d -m 755 ${D}/usr/share/matter
     cp -r ${S}/credentials ${D}/usr/share/matter
+    
+    # Python modules
+    install -d -m 755 ${D}${libdir}/python3/dist-packages/chip/
+    install ${S}/out/aarch64/obj/src/controller/python/chip/_ChipServer.so ${D}${libdir}/python3/dist-packages/chip/
+        
+    cp -r ${S}/src/controller/python/chip/* ${D}${libdir}/python3/dist-packages/chip/   
 }
 
 do_install_zap() {
     ln -sfr ${S}/bin/zap-cli ${RECIPE_SYSROOT_NATIVE}/usr/bin/
 }
 
+do_install_py[network] = "1"
+do_install_py() {
+
+    cd ${S}
+    PKG_CONFIG_SYSROOT_DIR=${PKG_CONFIG_SYSROOT_DIR} \
+    PKG_CONFIG_LIBDIR=${PKG_CONFIG_PATH} \
+    gn --root=${S} gen out/aarch64 --args='treat_warnings_as_errors=false target_os="linux" 
+        target_cpu="${TARGET_CPU}"
+        arm_arch="${TARGET_ARM_ARCH}"
+        arm_cpu="${TARGET_ARM_CPU}"
+        enable_pylib=false
+        enable_rtti=false
+        import("//build_overrides/build.gni")
+        chip_project_config_include_dirs=["//config/python"]
+        chip_controller=false
+        chip_data_model="//examples/lighting-app/lighting-common"
+        custom_toolchain="${build_root}/toolchain/custom"
+        target_cflags=[ "-Wno-error=format-security", "-I${S}/out/aarch64/gen/examples/lighting-app/lighting-common/zap_pregen/", "-I${D}/../recipe-sysroot/usr/include/python3.11/" ]
+        target_cc="${CC}"   
+        target_cxx="${CXX}"
+        target_ar="${AR}"'
+
+    export PYTHONPATH=$PYTHONPATH:/${D}/../recipe-sysroot/usr/lib/python3.11/site-packages/:/${D}/../recipe-sysroot-native/usr/lib/python3.11/site-packages/
+    ninja -C out/aarch64 python_wheels
+    ninja -C out/aarch64 chip-repl
+
+}
+
 addtask install_zap after do_prepare_recipe_sysroot
+
+addtask install_py after do_compile before do_install
 
 INSANE_SKIP_${PN} = "ldflags"
