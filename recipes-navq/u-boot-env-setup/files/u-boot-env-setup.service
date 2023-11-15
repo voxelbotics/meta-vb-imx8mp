@@ -1,0 +1,10 @@
+[Unit]
+Description=Setup U-Boot env configuration file
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/u-boot-env-setup.sh
+
+[Install]
+WantedBy=sysinit.target
