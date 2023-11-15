@@ -25,6 +25,10 @@ IMAGE_INSTALL:append = "opencv \
 			ot-br-posix \
 			navq-persistent-storage \
 			hdmi-detect \
+			u-boot-imx-env \
+			libubootenv-bin \
+			libubootenv \
+			u-boot-env-setup \
 			"
 
 IMAGE_INSTALL += "install-interface-config install-dns-config"
