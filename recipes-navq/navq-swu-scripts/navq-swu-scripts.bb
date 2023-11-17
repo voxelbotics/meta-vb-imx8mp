@@ -14,10 +14,6 @@ do_install() {
 	install -d ${D}${sysconfdir}/
 	install -d ${D}${sbindir}
 
-	# access to U-Boot env
-	echo "/dev/mmcblk2    0x400000        0x4000" > ${D}${sysconfdir}/fw_env.config
-	ln -sf u-boot-imx-initial-env ${D}${sysconfdir}/u-boot-initial-env
-
 	echo "${SWU_BOARD} ${SWU_HWCOMPAT}" > ${D}${sysconfdir}/hwrevision
 	echo -e "bootloader\t\t${SWU_UBOOT_VERSION}" > ${D}${sysconfdir}/sw-versions
 

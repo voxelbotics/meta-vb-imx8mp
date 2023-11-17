@@ -24,6 +24,7 @@ IMAGE_INSTALL:append = "		\
     dosfstools				\
     libgcc				\
     u-boot-imx-env			\
+    u-boot-env-setup			\
     libubootenv-bin			\
     libubootenv				\
     ${@bb.utils.contains('PACKAGE_CLASSES', 'package_rpm', 'rpm', '', d)} \
