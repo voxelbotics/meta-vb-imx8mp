@@ -123,7 +123,7 @@ popd # tmp
 pushd sources
 rm -f meta-vb-imx8mp && ln -s ../tmp/meta-vb-imx8mp . || exit $?
 git clone -b mickledore https://github.com/sbabic/meta-swupdate.git
-git clone -b LF6.1.22_P22 https://github.com/nxp-imx-support/meta-imx8mp-isp-ov5647.git
+git clone -b LF6.1.22_P22 https://github.com/voxelbotics/meta-imx8mp-isp-ov5647.git
 sed -ie 's/\(BBFILE_PRIORITY.* = \)"[0-9]\+"/\1"7"/' meta-imx8mp-isp-ov5647/conf/layer.conf
 popd # sources
 RELEASE_VER="${SETTAG}-$(date +%m%d%H%M)-${yocto_hash}"
