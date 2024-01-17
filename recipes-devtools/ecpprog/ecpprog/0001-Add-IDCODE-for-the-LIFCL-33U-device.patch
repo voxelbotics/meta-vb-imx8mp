@@ -1,0 +1,21 @@
+From c3f5a4a28801f25e3da65da662f138ff2793f348 Mon Sep 17 00:00:00 2001
+From: Alexander Yurtsev <alex@voxelbotics.com>
+Date: Wed, 17 Jan 2024 20:21:32 +0100
+Subject: [PATCH] Add IDCODE for the LIFCL-33U device
+
+---
+ ecpprog/lattice_cmds.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ecpprog/lattice_cmds.h b/ecpprog/lattice_cmds.h
+index 5da0bb8..cee7df4 100644
+--- a/ecpprog/lattice_cmds.h
++++ b/ecpprog/lattice_cmds.h
+@@ -69,6 +69,7 @@ const struct device_id_pair nx_devices[] =
+ 	/* Crosslink NX */
+ 	{"LIFCL-17",    0x010F0043 },
+ 	{"LIFCL-40-ES", 0x010F1043 },
++	{"LIFCL-33U",   0x010FB043 },
+ 	{"LIFCL-40",    0x110F1043 },
+ 	/* Certus NX */
+ 	{"LFD2NX-17",   0x310F0043 },

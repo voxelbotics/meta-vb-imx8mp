@@ -29,6 +29,7 @@ IMAGE_INSTALL:append = "opencv \
 			libubootenv-bin \
 			libubootenv \
 			u-boot-env-setup \
+			ecpprog \
 			"
 
 IMAGE_INSTALL += "install-interface-config install-dns-config"
