@@ -161,6 +161,7 @@ APTGET_EXTRA_PACKAGES += "\
 APTGET_EXTRA_PACKAGES_LAST += " \
 	ros-humble-desktop \
 	ros-humble-cv-bridge \
+	ros-humble-foxglove-bridge \
 	ros-humble-image-tools \
 	ros-humble-image-transport \
 	ros-humble-image-transport-plugins \
@@ -231,15 +232,33 @@ fakeroot do_fix_dns() {
 fakeroot do_install_home_files() {
 	set -x
 
-	wget -q -P ${APTGET_CHROOT_DIR}/home/user/ https://raw.githubusercontent.com/rudislabs/NavQPlus-Resources/lf-5.15.32_2.0.0/configs/CycloneDDSConfig.xml
+	wget -q -P ${APTGET_CHROOT_DIR}/home/user/ https://raw.githubusercontent.com/rudislabs/NavQPlus-Resources/lf-6.1.22_2.0.0/configs/CycloneDDSConfig.xml
 
-	echo "source /opt/ros/humble/setup.bash" >> ${APTGET_CHROOT_DIR}/home/user/.bashrc
-	echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> ${APTGET_CHROOT_DIR}/home/user/.bashrc
-	echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ${APTGET_CHROOT_DIR}/home/user/.bashrc
-	echo "export CYCLONEDDS_URI=/home/\$USER/CycloneDDSConfig.xml" >> ${APTGET_CHROOT_DIR}/home/user/.bashrc
+	cat >> ${APTGET_CHROOT_DIR}/home/user/.bashrc <<-EOF
+		source /opt/ros/humble/setup.bash
+		source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash
+		export ROS_DOMAIN_ID=7
+		export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+		export CYCLONEDDS_URI=/home/user/CycloneDDSConfig.xml
+		export PYTHONWARNINGS=ignore:::setuptools.installer,ignore:::setuptools.command.install,ignore:::setuptools.command.easy_install
+		export PATH=/usr/lib/ccache:\$PATH
+		export CCACHE_TEMPDIR=/tmp/ccache
+		EOF
+
+	cat >> ${APTGET_CHROOT_DIR}/home/user/install_cognipilot.sh <<-EOF
+		wget -O /home/user/navqplus_install.sh https://raw.githubusercontent.com/CogniPilot/helmet/main/install/navqplus_install.sh
+		chmod a+x /home/user/navqplus_install.sh
+		./home/user/navqplus_install.sh
+		EOF
 
 	chown user:user ${APTGET_CHROOT_DIR}/home/user/CycloneDDSConfig.xml
 	chown user:user ${APTGET_CHROOT_DIR}/home/user/.bashrc
+
+	mkdir -p ${APTGET_CHROOT_DIR}/home/user/.cache/
+	chown -R user:user ${APTGET_CHROOT_DIR}/home/user/.cache/
+
+	chown user:user ${APTGET_CHROOT_DIR}/home/user/install_cognipilot.sh
+	chmod 755 ${APTGET_CHROOT_DIR}/home/user/install_cognipilot.sh
 
 	set +x
 }
