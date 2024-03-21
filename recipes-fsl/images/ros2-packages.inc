@@ -96,6 +96,7 @@ ros-humble-unique-identifier-msgs \
 ros-humble-ur-dashboard-msgs \
 ros-humble-ur-msgs \
 ros-humble-urg-node-msgs \
+ros-humble-v4l2-camera \
 ros-humble-velodyne-msgs \
 ros-humble-vision-msgs \
 ros-humble-visualization-msgs \
