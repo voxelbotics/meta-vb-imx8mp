@@ -101,6 +101,7 @@ APTGET_EXTRA_PACKAGES += "\
 	python3-pytest-rerunfailures \
 	python3-pytest \
 	python3-can \
+	python3-hid \
 	g++ \
 	gcc \
 	gdb \
