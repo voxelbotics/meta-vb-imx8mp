@@ -1,0 +1,20 @@
+diff --git a/board/voxelbotics/navqp/navqp.c b/board/voxelbotics/navqp/navqp.c
+index e1232aacca..01ec173423 100644
+--- a/board/voxelbotics/navqp/navqp.c
++++ b/board/voxelbotics/navqp/navqp.c
+@@ -550,7 +550,15 @@ int board_init(void)
+ int board_late_init(void)
+ {
+ #ifdef CONFIG_ENV_IS_IN_MMC
++	char mmcblk[32];
++	u32 dev_no = mmc_get_env_dev();
++	/* rootfs partition number is boot partition + 2 for reliable upgrade */
++	int part = env_get_ulong("mmcpart", 10, 1) + 2;
++
+ 	board_late_mmc_env_init();
++	sprintf(mmcblk, "/dev/mmcblk%dp%d rootwait rw",
++		mmc_map_to_kernel_blk(dev_no), part);
++	env_set("mmcroot", mmcblk);
+ #endif
+ #ifdef CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
+ 	env_set("board_name", "EVK");
