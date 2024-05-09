@@ -17,6 +17,7 @@ SRC_URI += " \
     file://ipv6.cfg \
     file://usb-serial.cfg \
     file://imx219.cfg \
+    file://usbmon.cfg \
 "
 
 do_configure:append () {
