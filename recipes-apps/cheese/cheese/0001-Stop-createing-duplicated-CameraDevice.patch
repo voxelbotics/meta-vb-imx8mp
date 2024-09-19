@@ -1,0 +1,40 @@
+From b9fc5abdb461c364a9c1f634a01c8c2fe87e3213 Mon Sep 17 00:00:00 2001
+From: Robert Mader <robert.mader@posteo.de>
+Date: Tue, 3 Jan 2023 17:51:31 +0100
+Subject: [PATCH] device-monitor: Stop createing duplicated CameraDevices
+
+Devices detected in `cheese_camera_device_monitor_coldplug()` may get
+duplicated, as Gstreamer will emit `GST_MESSAGE_DEVICE_ADDED` for them.
+
+While this issue could be fixed by reorganizing the initialization code,
+let's go with a simple and robust solution and check if a
+`CheeseCameraDevice` using the `GstDevice` is already present.
+---
+ libcheese/cheese-camera-device-monitor.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/libcheese/cheese-camera-device-monitor.c b/libcheese/cheese-camera-device-monitor.c
+index 87c48ccb..a2c3565c 100644
+--- a/libcheese/cheese-camera-device-monitor.c
++++ b/libcheese/cheese-camera-device-monitor.c
+@@ -114,7 +114,16 @@ static void
+ cheese_camera_device_monitor_added (CheeseCameraDeviceMonitor *monitor,
+                                     GstDevice                 *device)
+ {
+-  CheeseCameraDevice *newdev = cheese_camera_device_monitor_set_up_device (device);
++  CheeseCameraDevice *olddev;
++  CheeseCameraDevice *newdev;
++
++  olddev = g_object_get_data (G_OBJECT (device), "cheese-camera-device");
++  if (olddev) {
++      GST_DEBUG ("Ignoring duplicate device %" GST_PTR_FORMAT, device);
++      return;
++  }
++
++  newdev = cheese_camera_device_monitor_set_up_device (device);
+   /* Ignore non-video devices, GNOME bug #677544. */
+   if (newdev) {
+     g_object_set_data (G_OBJECT (device), "cheese-camera-device", newdev);
+-- 
+GitLab
+
